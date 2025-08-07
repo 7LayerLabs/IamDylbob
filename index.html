@@ -58,6 +58,37 @@
             }
         }
 
+        /* Container for text elements */
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* "I am" text styling */
+        .prefix-text {
+            font-size: clamp(1rem, 3vw, 2rem);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: -0.5rem;
+            background: linear-gradient(
+                45deg,
+                #ffffff,
+                #ff00ff,
+                #00ffff,
+                #ffffff
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite;
+            filter: contrast(1.2) brightness(1.1);
+        }
+
         /* Main text styling */
         .main-text {
             font-size: clamp(3rem, 10vw, 8rem);
@@ -156,7 +187,7 @@
             align-items: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            animation: popUp 1s ease-out 3s forwards, float-bubble 3s ease-in-out infinite;
+            animation: popUp 1s ease-out 2s forwards, float-bubble 3s ease-in-out infinite;
             z-index: 100;
             box-shadow: 0 0 30px rgba(226, 54, 54, 0.6),
                         0 0 60px rgba(183, 28, 28, 0.4);
@@ -261,10 +292,13 @@
 <body>
     <div class="particles" id="particles"></div>
     <div class="scanline"></div>
-    <h1 class="main-text">DylBob</h1>
+    <div class="text-container">
+        <span class="prefix-text">I am</span>
+        <h1 class="main-text">DylBob</h1>
+    </div>
     
     <!-- Link Bubble -->
-    <a href="file:///C:/Users/Derek/Desktop/marvel-legends-tracker-main/index.html" class="link-bubble" id="linkBubble">
+    <a href="marvel-legends-tracker/index.html" class="link-bubble" id="linkBubble">
         <span class="link-bubble-text">Marvel</span>
     </a>
 

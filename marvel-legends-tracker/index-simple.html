@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel Legends Collection Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="opacity: 1 !important;">
+    <div class="user-info" id="userInfo">
+        <span class="user-name">Welcome, Guest User</span>
+    </div>
+    <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="collection">My Collection</button>
+        <button class="nav-tab" data-tab="inventory">Full Inventory</button>
+    </nav>
+    <div class="container">
+        <header>
+            <div class="marvel-logo">
+                <img src="images/marvel_logo.avif" alt="Marvel Logo">
+            </div>
+            <h1>LEGENDS COLLECTION TRACKER</h1>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalCount">0</span>
+                    <span class="stat-label">Total Figures</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="ownedCount">0</span>
+                    <span class="stat-label">Owned</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="wishlistCount">0</span>
+                    <span class="stat-label">Wishlist</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="addFigureBtn">+ Add Figure</button>
+            <input type="text" id="searchInput" placeholder="Search figures..." class="search-input">
+            <select id="filterStatus" class="filter-select">
+                <option value="all">All Figures</option>
+                <option value="owned">Owned</option>
+                <option value="wishlist">Wishlist</option>
+                <option value="ordered">Ordered</option>
+            </select>
+            <select id="filterWave" class="filter-select">
+                <option value="all">All Waves</option>
+            </select>
+        </div>
+
+        <div id="addFigureModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Add New Figure</h2>
+                <form id="addFigureForm">
+                    <div class="form-group">
+                        <label for="figureName">Figure Name*</label>
+                        <input type="text" id="figureName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="figureWave">Wave/Series</label>
+                        <input type="text" id="figureWave" placeholder="e.g., Spider-Man No Way Home">
+                    </div>
+                    <div class="form-group">
+                        <label for="figureYear">Year</label>
+                        <input type="number" id="figureYear" min="1984" max="2030" placeholder="2024">
+                    </div>
+                    <div class="form-group">
+                        <label for="figureStatus">Status*</label>
+                        <select id="figureStatus" required>
+                            <option value="owned">Owned</option>
+                            <option value="wishlist">Wishlist</option>
+                            <option value="ordered">Ordered</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="figureBaf">BAF Part</label>
+                        <input type="text" id="figureBaf" placeholder="e.g., Left Arm">
+                    </div>
+                    <div class="form-group">
+                        <label for="figurePrice">Price Paid</label>
+                        <input type="number" id="figurePrice" step="0.01" placeholder="19.99">
+                    </div>
+                    <div class="form-group">
+                        <label for="figureNotes">Notes</label>
+                        <textarea id="figureNotes" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Figure</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="tab-content active" id="collectionTab">
+            <div class="collection-info">
+                <p>💡 Tip: Removing items only removes them from your personal collection. You can always re-add them from the Full Inventory tab!</p>
+            </div>
+            <div class="figures-grid" id="figuresGrid">
+            </div>
+        </div>
+
+        <div class="tab-content" id="inventoryTab">
+            <div class="inventory-controls">
+                <input type="text" id="inventorySearch" placeholder="Search inventory..." class="search-input">
+                <select id="categoryFilter" class="filter-select">
+                    <option value="all">All Categories</option>
+                </select>
+                <select id="yearFilter" class="filter-select">
+                    <option value="all">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                </select>
+                <select id="sortBy" class="filter-select">
+                    <option value="name">Sort by Name</option>
+                    <option value="year-new">Year (Newest)</option>
+                    <option value="year-old">Year (Oldest)</option>
+                    <option value="category">Category</option>
+                    <option value="wave">Wave/Series</option>
+                    <option value="price-low">Price (Low-High)</option>
+                    <option value="price-high">Price (High-Low)</option>
+                </select>
+                <button class="view-toggle" id="viewToggle" onclick="toggleView()">
+                    <span class="view-icon">⊞</span> Group View
+                </button>
+            </div>
+            <div class="inventory-stats">
+                <span class="inventory-stat">Total Available: <strong id="totalInventory">0</strong></span>
+                <span class="inventory-stat">Categories: <strong id="totalCategories">0</strong></span>
+                <span class="inventory-stat">Waves: <strong id="totalWaves">0</strong></span>
+            </div>
+            <div class="inventory-grid" id="inventoryGrid">
+            </div>
+        </div>
+    </div>
+
+    <script src="fetchFigures.js"></script>
+    <script src="script-simple.js"></script>
+</body>
+</html>

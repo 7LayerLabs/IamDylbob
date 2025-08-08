@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.Y.L.B.O.B OS - Derek's Personal Operating System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="boot-sequence" class="boot-sequence">
+        <div class="boot-text">
+            <div class="stark-logo">D.Y.L.B.O.B</div>
+            <div class="loading-text" style="color: #ff0000; text-shadow: 0 0 10px #ff0000;">INITIALIZE SYSTEM LOAD</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="desktop" class="desktop">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="system-info">
+                <span class="jarvis-label">D.Y.L.B.O.B ONLINE</span>
+                <span class="time" id="system-time"></span>
+                <span class="date" id="system-date"></span>
+            </div>
+            <div class="arc-reactor"></div>
+        </div>
+
+        <!-- Desktop Area -->
+        <div class="desktop-area" id="desktop-area">
+            <!-- AI Assistant -->
+            <div class="window" id="ai-assistant" style="left: 20px; top: 80px;">
+                <div class="window-header">
+                    <span class="window-title">D.Y.L.B.O.B INTERFACE</span>
+                    <div class="window-controls">
+                        <button class="minimize-btn">─</button>
+                        <button class="maximize-btn">□</button>
+                        <button class="close-btn">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="ai-display">
+                        <div class="ai-avatar">
+                            <div class="ai-core"></div>
+                            <div class="ai-ring ring-1"></div>
+                            <div class="ai-ring ring-2"></div>
+                            <div class="ai-ring ring-3"></div>
+                        </div>
+                        <div class="ai-chat">
+                            <div class="ai-messages" id="ai-messages">
+                                <div class="ai-message">Welcome back, Derek. All systems are operational. IamDylbob.com and trading platforms are online.</div>
+                            </div>
+                            <div class="ai-input-container">
+                                <input type="text" class="ai-input" id="ai-input" placeholder="Command D.Y.L.B.O.B... (Try: MARVEL, ONE PIECE, DYLBOB)">
+                                <button class="ai-send" id="ai-send">EXECUTE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notepad -->
+            <div class="window" id="notepad" style="left: 20px; top: 320px;">
+                <div class="window-header">
+                    <span class="window-title">NOTEPAD</span>
+                    <div class="window-controls">
+                        <button class="minimize-btn">─</button>
+                        <button class="maximize-btn">□</button>
+                        <button class="close-btn">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="notepad-container">
+                        <div class="notepad-toolbar">
+                            <button class="notepad-btn" id="note-save">SAVE</button>
+                            <button class="notepad-btn" id="note-clear">CLEAR</button>
+                            <span class="word-count">Words: <span id="word-count">0</span></span>
+                        </div>
+                        <textarea class="notepad-area" id="notepad-area" placeholder="Start typing your notes..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web Browser -->
+            <div class="window" id="web-browser" style="left: 400px; top: 80px; width: 800px; height: 500px;">
+                <div class="window-header">
+                    <span class="window-title">SARGENT DYLAN WEB ACTIVITY</span>
+                    <div class="window-controls">
+                        <button class="minimize-btn">─</button>
+                        <button class="maximize-btn">□</button>
+                        <button class="close-btn">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="browser-container">
+                        <div class="browser-toolbar">
+                            <button class="browser-btn" id="browser-back">◀</button>
+                            <button class="browser-btn" id="browser-forward">▶</button>
+                            <button class="browser-btn" id="browser-refresh">⟳</button>
+                            <input type="text" class="browser-url" id="browser-url" value="https://iamdylbob.com">
+                            <button class="browser-btn" id="browser-go">GO</button>
+                        </div>
+                        <div class="browser-frame" id="browser-frame">
+                            <div class="browser-content">
+                                <div class="browser-welcome">
+                                    <h2>SARGENT DYLAN WEB ACTIVITY</h2>
+                                    <p>Enter a URL above or use EXECUTE commands:</p>
+                                    <div class="quick-links">
+                                        <button class="quick-link" data-url="https://iamdylbob.com">IamDylbob</button>
+                                        <button class="quick-link" data-url="https://google.com">Google</button>
+                                        <button class="quick-link" data-url="https://github.com">GitHub</button>
+                                        <button class="quick-link" data-url="https://youtube.com">YouTube</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eva's Garden Intelligence -->
+            <div class="window" id="plantation" style="left: 780px; top: 380px; width: 400px;">
+                <div class="window-header">
+                    <span class="window-title">EVA'S GARDEN INTELLIGENCE</span>
+                    <div class="window-controls">
+                        <button class="minimize-btn">─</button>
+                        <button class="maximize-btn">□</button>
+                        <button class="close-btn">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="plantation-container">
+                        <div class="plant-header">
+                            <span class="plant-icon">🌿</span>
+                            <span class="plant-title">Botanical Knowledge Base</span>
+                            <span class="plant-icon">🌱</span>
+                        </div>
+                        <div class="plant-fact">
+                            <h3>Fact of the Day:</h3>
+                            <p id="plant-fact">Spider plants can remove up to 90% of toxins from the air in just two days!</p>
+                        </div>
+                        <div class="plant-tip">
+                            <h3>Growing Tip:</h3>
+                            <p id="plant-tip">Water your plants in the morning! This gives them time to absorb water before the heat of the day and reduces the risk of fungal diseases.</p>
+                        </div>
+                        <div class="plant-footer">
+                            <button class="plant-btn" id="new-plant-fact">NEW WISDOM</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculator -->
+            <div class="window" id="calculator" style="left: 400px; top: 380px;">
+                <div class="window-header">
+                    <span class="window-title">QUANTUM CALCULATOR</span>
+                    <div class="window-controls">
+                        <button class="minimize-btn">─</button>
+                        <button class="maximize-btn">□</button>
+                        <button class="close-btn">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="calculator-container">
+                        <input type="text" class="calc-display" id="calc-display" value="0" readonly>
+                        <div class="calc-buttons">
+                            <button class="calc-btn calc-clear" data-action="clear">C</button>
+                            <button class="calc-btn calc-op" data-action="divide">÷</button>
+                            <button class="calc-btn calc-op" data-action="multiply">×</button>
+                            <button class="calc-btn calc-del" data-action="delete">⌫</button>
+                            
+                            <button class="calc-btn" data-value="7">7</button>
+                            <button class="calc-btn" data-value="8">8</button>
+                            <button class="calc-btn" data-value="9">9</button>
+                            <button class="calc-btn calc-op" data-action="subtract">−</button>
+                            
+                            <button class="calc-btn" data-value="4">4</button>
+                            <button class="calc-btn" data-value="5">5</button>
+                            <button class="calc-btn" data-value="6">6</button>
+                            <button class="calc-btn calc-op" data-action="add">+</button>
+                            
+                            <button class="calc-btn" data-value="1">1</button>
+                            <button class="calc-btn" data-value="2">2</button>
+                            <button class="calc-btn" data-value="3">3</button>
+                            <button class="calc-btn calc-equals" data-action="equals" rowspan="2">=</button>
+                            
+                            <button class="calc-btn calc-zero" data-value="0">0</button>
+                            <button class="calc-btn" data-value=".">.</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holographic Display -->
+            <div class="hologram-container">
+                <div class="hologram">
+                    <div class="holo-grid"></div>
+                    <div class="holo-data">
+                        <div class="data-stream"></div>
+                        <div class="data-stream"></div>
+                        <div class="data-stream"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dock/Taskbar -->
+        <div class="dock">
+            <div class="dock-item" data-window="ai-assistant">
+                <div class="dock-icon">🤖</div>
+                <span class="dock-label">D.Y.L.B.O.B</span>
+            </div>
+            <div class="dock-item" data-window="notepad">
+                <div class="dock-icon">📝</div>
+                <span class="dock-label">NOTEPAD</span>
+            </div>
+            <div class="dock-item" data-window="web-browser">
+                <div class="dock-icon">🌐</div>
+                <span class="dock-label">BROWSER</span>
+            </div>
+            <div class="dock-item" data-window="calculator">
+                <div class="dock-icon">🧮</div>
+                <span class="dock-label">CALC</span>
+            </div>
+            <div class="dock-item" data-window="plantation">
+                <div class="dock-icon">🌿</div>
+                <span class="dock-label">EVA'S GARDEN</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -287,6 +287,147 @@
                 opacity: 0;
             }
         }
+
+        /* Secret Mission Bubble */
+        .secret-bubble {
+            position: fixed;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #555555 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: dropDown 2s ease-out 3s forwards, secretPulse 4s ease-in-out infinite;
+            z-index: 100;
+            box-shadow: 0 0 30px rgba(100, 100, 100, 0.8),
+                        0 0 60px rgba(50, 50, 50, 0.6),
+                        inset 0 0 20px rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes dropDown {
+            0% {
+                top: -150px;
+                transform: translateX(-50%) rotate(0deg) scale(0);
+            }
+            50% {
+                transform: translateX(-50%) rotate(180deg) scale(1.2);
+            }
+            70% {
+                top: 60px;
+                transform: translateX(-50%) rotate(270deg) scale(0.9);
+            }
+            85% {
+                top: 40px;
+                transform: translateX(-50%) rotate(340deg) scale(1.1);
+            }
+            100% {
+                top: 50px;
+                transform: translateX(-50%) rotate(360deg) scale(1);
+            }
+        }
+
+        @keyframes secretPulse {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0) scale(1);
+                box-shadow: 0 0 30px rgba(100, 100, 100, 0.8),
+                           0 0 60px rgba(50, 50, 50, 0.6),
+                           inset 0 0 20px rgba(255, 255, 255, 0.1);
+            }
+            25% {
+                transform: translateX(-50%) translateY(-10px) scale(1.05);
+            }
+            50% {
+                transform: translateX(-50%) translateY(0) scale(1);
+                box-shadow: 0 0 50px rgba(150, 150, 150, 1),
+                           0 0 100px rgba(100, 100, 100, 0.8),
+                           inset 0 0 30px rgba(255, 255, 255, 0.2);
+            }
+            75% {
+                transform: translateX(-50%) translateY(10px) scale(0.95);
+            }
+        }
+
+        .secret-bubble::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .secret-bubble:hover {
+            transform: translateX(-50%) scale(1.15);
+            box-shadow: 0 0 50px rgba(200, 200, 200, 1),
+                        0 0 100px rgba(150, 150, 150, 0.8),
+                        inset 0 0 40px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #2a2a2a 0%, #444444 50%, #666666 100%);
+        }
+
+        .secret-bubble-text {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                        0 0 20px rgba(255, 255, 255, 0.3);
+            animation: secretTextGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes secretTextGlow {
+            0%, 100% {
+                opacity: 0.7;
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 20px rgba(255, 255, 255, 1),
+                           0 0 30px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* Secret mission reveal effect */
+        .secret-bubble.activated::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            animation: secretRipple 1s ease-out;
+        }
+
+        @keyframes secretRipple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                border-color: rgba(255, 255, 255, 1);
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+                border-color: rgba(255, 255, 255, 0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -300,6 +441,11 @@
     <!-- Link Bubble -->
     <a href="marvel-legends-tracker/index.html" class="link-bubble" id="linkBubble">
         <span class="link-bubble-text">Marvel</span>
+    </a>
+    
+    <!-- Secret Mission Bubble -->
+    <a href="opsystem/index.html" class="secret-bubble" id="secretBubble">
+        <span class="secret-bubble-text">Private<br>System</span>
     </a>
 
     <script>
@@ -339,6 +485,17 @@
             setTimeout(() => {
                 this.classList.remove('clicked');
             }, 600);
+        });
+
+        // Add secret mission activation effect
+        const secretBubble = document.getElementById('secretBubble');
+        secretBubble.addEventListener('click', function(e) {
+            
+            // Add activation animation
+            this.classList.add('activated');
+            setTimeout(() => {
+                this.classList.remove('activated');
+            }, 1000);
         });
     </script>
 </body>

@@ -15,35 +15,42 @@ let unsubscribeSync = null;
 
 // Create auth UI elements
 export function createAuthUI() {
-    const authContainer = document.createElement('div');
-    authContainer.className = 'auth-container';
-    authContainer.innerHTML = `
-        <div class="auth-status">
-            <div id="authInfo" class="auth-info"></div>
-            <button id="authBtn" class="auth-btn"></button>
-        </div>
-    `;
-    
-    // Insert after navbar
-    const navbar = document.querySelector('.navbar');
-    navbar.parentNode.insertBefore(authContainer, navbar.nextSibling);
-    
-    // Add styles
-    const style = document.createElement('style');
-    style.textContent = `
-        .auth-container {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            z-index: 1000;
-            background: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+    try {
+        const authContainer = document.createElement('div');
+        authContainer.className = 'auth-container';
+        authContainer.innerHTML = `
+            <div class="auth-status">
+                <div id="authInfo" class="auth-info">Initializing...</div>
+                <button id="authBtn" class="auth-btn" style="display: none;">Sign In</button>
+            </div>
+        `;
+        
+        // Insert after navbar
+        const navbar = document.querySelector('.navbar');
+        if (navbar && navbar.parentNode) {
+            navbar.parentNode.insertBefore(authContainer, navbar.nextSibling);
+        } else {
+            document.body.prepend(authContainer);
         }
+    
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .auth-container {
+                position: fixed;
+                top: 70px;
+                right: 20px;
+                z-index: 9999;
+                background: white;
+                padding: 12px 18px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                min-width: 220px;
+                border: 2px solid #87a96b;
+            }
         
         .auth-info {
             font-size: 14px;
@@ -96,25 +103,63 @@ export function createAuthUI() {
     syncIndicator.textContent = '☁️ Syncing...';
     document.body.appendChild(syncIndicator);
     
-    // Set up auth button
-    const authBtn = document.getElementById('authBtn');
-    authBtn.addEventListener('click', handleAuthClick);
-    
-    // Monitor auth state
-    onAuthStateChanged(auth, handleAuthStateChange);
+        // Set up auth button
+        const authBtn = document.getElementById('authBtn');
+        if (authBtn) {
+            authBtn.addEventListener('click', handleAuthClick);
+        }
+        
+        // Monitor auth state
+        onAuthStateChanged(auth, (user) => {
+            handleAuthStateChange(user);
+        });
+        
+    } catch (error) {
+        console.error('Error creating auth UI:', error);
+        // Create a fallback UI
+        const fallbackAuth = document.createElement('div');
+        fallbackAuth.className = 'auth-container';
+        fallbackAuth.innerHTML = `
+            <div class="auth-status">
+                <div class="auth-info">Sign-in temporarily unavailable</div>
+            </div>
+        `;
+        document.body.prepend(fallbackAuth);
+    }
 }
 
 async function handleAuthClick() {
-    if (currentUser) {
-        await signOutUser();
-    } else {
-        await signInWithGoogle();
+    const authBtn = document.getElementById('authBtn');
+    
+    try {
+        authBtn.disabled = true;
+        authBtn.textContent = 'Processing...';
+        
+        if (currentUser) {
+            await signOutUser();
+        } else {
+            await signInWithGoogle();
+        }
+    } catch (error) {
+        console.error('Auth error:', error);
+        alert('Sign-in failed. Please check your internet connection and try again.');
+    } finally {
+        authBtn.disabled = false;
+        authBtn.textContent = currentUser ? 'Sign Out' : 'Sign In with Google';
     }
 }
 
 async function handleAuthStateChange(user) {
     const authInfo = document.getElementById('authInfo');
     const authBtn = document.getElementById('authBtn');
+    
+    if (!authInfo || !authBtn) {
+        console.error('Auth UI elements not found');
+        return;
+    }
+    
+    // Show the button now that auth state is determined
+    authBtn.style.display = 'block';
     
     if (user) {
         currentUser = user;

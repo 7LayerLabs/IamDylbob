@@ -405,19 +405,29 @@ async function searchPlantDatabase() {
             return;
         }
         
-        // Display search results
-        searchResults.innerHTML = `
-            <div class="search-results-grid">
-                ${results.slice(0, 6).map(plant => `
-                    <div class="plant-result-card" onclick="selectPlantFromSearch('${plant.common_name}', ${plant.id}, '${plant.source}')">
-                        ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="plant-thumb">` : '<div class="plant-thumb-placeholder">🌿</div>'}
-                        <h4>${plant.common_name}</h4>
-                        <p class="scientific-name">${Array.isArray(plant.scientific_name) ? plant.scientific_name[0] : plant.scientific_name || ''}</p>
-                        <button class="btn-select">View Care Info</button>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+        // Display search results - use proper event handlers
+        const resultsGrid = document.createElement('div');
+        resultsGrid.className = 'search-results-grid';
+        
+        results.slice(0, 6).forEach(plant => {
+            const card = document.createElement('div');
+            card.className = 'plant-result-card';
+            card.innerHTML = `
+                ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="plant-thumb">` : '<div class="plant-thumb-placeholder">🌿</div>'}
+                <h4>${plant.common_name}</h4>
+                <p class="scientific-name">${Array.isArray(plant.scientific_name) ? plant.scientific_name[0] : plant.scientific_name || ''}</p>
+                <button class="btn-select">View Care Info</button>
+            `;
+            
+            card.addEventListener('click', () => {
+                selectPlantFromSearch(plant.common_name, plant.id, plant.source);
+            });
+            
+            resultsGrid.appendChild(card);
+        });
+        
+        searchResults.innerHTML = '';
+        searchResults.appendChild(resultsGrid);
     } catch (error) {
         console.error('Search error:', error);
         searchResults.innerHTML = '<p style="color: #cc0000;">Error searching database. Please try again.</p>';
@@ -534,9 +544,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Hero Search Functions
+let heroSearchTimeout;
 async function heroSearchPlant() {
     const searchInput = document.getElementById('heroPlantSearch');
     const searchResults = document.getElementById('heroSearchResults');
+    
+    // Clear previous timeout
+    clearTimeout(heroSearchTimeout);
     
     if (!searchInput.value.trim()) {
         searchResults.innerHTML = '';
@@ -544,6 +558,9 @@ async function heroSearchPlant() {
     }
     
     searchResults.innerHTML = '<p style="color: white; text-align: center;">🔍 Searching plant database...</p>';
+    
+    // Debounce the search
+    heroSearchTimeout = setTimeout(async () => {
     
     try {
         const results = await window.plantAPI.searchPlants(searchInput.value);
@@ -553,22 +570,36 @@ async function heroSearchPlant() {
             return;
         }
         
-        // Display search results
-        searchResults.innerHTML = `
-            <div class="search-results-grid">
-                <h3 style="grid-column: 1/-1; text-align: center; color: #2d5016; margin-bottom: 20px;">
-                    Found ${results.length} plants matching "${searchInput.value}"
-                </h3>
-                ${results.slice(0, 6).map(plant => `
-                    <div class="plant-result-card" onclick="viewPlantDetails('${plant.common_name.replace(/'/g, "\\'")}', ${plant.id}, '${plant.source}')">
-                        ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="plant-thumb">` : '<div class="plant-thumb-placeholder">🌿</div>'}
-                        <h4>${plant.common_name}</h4>
-                        <p class="scientific-name">${Array.isArray(plant.scientific_name) ? plant.scientific_name[0] : plant.scientific_name || ''}</p>
-                        <button class="btn-select">View Details</button>
-                    </div>
-                `).join('')}
-            </div>
+        // Display search results - use data attributes instead of onclick
+        const resultsHTML = document.createElement('div');
+        resultsHTML.className = 'search-results-grid';
+        resultsHTML.innerHTML = `
+            <h3 style="grid-column: 1/-1; text-align: center; color: #2d5016; margin-bottom: 20px;">
+                Found ${results.length} plants matching "${searchInput.value}"
+            </h3>
         `;
+        
+        // Create cards with event listeners instead of inline onclick
+        results.slice(0, 6).forEach(plant => {
+            const card = document.createElement('div');
+            card.className = 'plant-result-card';
+            card.innerHTML = `
+                ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="plant-thumb">` : '<div class="plant-thumb-placeholder">🌿</div>'}
+                <h4>${plant.common_name}</h4>
+                <p class="scientific-name">${Array.isArray(plant.scientific_name) ? plant.scientific_name[0] : plant.scientific_name || ''}</p>
+                <button class="btn-select">View Details</button>
+            `;
+            
+            // Add click handler properly
+            card.addEventListener('click', () => {
+                viewPlantDetails(plant.common_name, plant.id, plant.source);
+            });
+            
+            resultsHTML.appendChild(card);
+        });
+        
+        searchResults.innerHTML = '';
+        searchResults.appendChild(resultsHTML);
         
         // Smooth scroll to results
         searchResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -576,6 +607,7 @@ async function heroSearchPlant() {
         console.error('Search error:', error);
         searchResults.innerHTML = '<p style="color: white; text-align: center;">Error searching database. Please try again.</p>';
     }
+    }, 300); // Wait 300ms after user stops typing
 }
 
 // Quick search from suggestions
@@ -596,28 +628,138 @@ async function viewPlantDetails(plantName, plantId, source) {
         const details = await window.plantAPI.getPlantDetails(plantId, source);
         
         if (details) {
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <button class="modal-close" onclick="this.closest('.plant-modal').remove()">×</button>
-                    <h2>${plantName}</h2>
-                    ${details.image ? `<img src="${details.image}" alt="${plantName}" class="modal-plant-image">` : ''}
-                    <div class="modal-details">
-                        <h3>Care Information</h3>
-                        <p><strong>💧 Watering:</strong> ${details.watering || 'Moderate'}</p>
-                        <p><strong>☀️ Sunlight:</strong> ${Array.isArray(details.sunlight) ? details.sunlight.join(', ') : details.sunlight || 'Partial sun'}</p>
-                        ${details.care_level ? `<p><strong>📊 Care Level:</strong> ${details.care_level}</p>` : ''}
-                        ${details.indoor !== undefined ? `<p><strong>🏠 Indoor Plant:</strong> ${details.indoor ? 'Yes' : 'No'}</p>` : ''}
-                        ${details.poisonous_to_pets ? `<p><strong>⚠️ Pet Safe:</strong> No - Toxic to pets</p>` : ''}
-                        ${details.description ? `<p><strong>About:</strong> ${details.description}</p>` : ''}
-                    </div>
-                    <div class="modal-actions">
-                        <button class="btn-primary" onclick="addToTracker('${plantName.replace(/'/g, "\\'")}', ${details.watering === 'Frequent' ? 3 : details.watering === 'Low' ? 10 : details.watering === 'Minimal' ? 14 : 7})">
-                            Add to My Tracker
-                        </button>
-                        <button class="btn-secondary" onclick="this.closest('.plant-modal').remove()">Close</button>
-                    </div>
+            const modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            
+            // Calculate watering days
+            let wateringDays = 7;
+            if (details.watering === 'Frequent') wateringDays = 3;
+            else if (details.watering === 'Low') wateringDays = 10;
+            else if (details.watering === 'Minimal') wateringDays = 14;
+            
+            modalContent.innerHTML = `
+                <button class="modal-close">×</button>
+                <h2>${plantName}</h2>
+                ${details.scientific_name ? `<p class="scientific-name" style="font-style: italic; color: #666; margin-top: -10px;">${Array.isArray(details.scientific_name) ? details.scientific_name[0] : details.scientific_name}</p>` : ''}
+                ${details.family ? `<p style="color: #87a96b; font-size: 14px;">Family: ${details.family}</p>` : ''}
+                
+                ${details.image ? `<img src="${details.image}" alt="${plantName}" class="modal-plant-image">` : ''}
+                
+                <!-- Quick Stats -->
+                <div class="quick-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 20px 0; padding: 15px; background: #f0f5e8; border-radius: 10px;">
+                    ${details.care_level ? `<div><strong>📊 Care:</strong><br>${details.care_level}</div>` : ''}
+                    ${details.growth_rate ? `<div><strong>📈 Growth:</strong><br>${details.growth_rate}</div>` : ''}
+                    ${details.cycle ? `<div><strong>🔄 Cycle:</strong><br>${details.cycle}</div>` : ''}
+                    ${details.type ? `<div><strong>🌿 Type:</strong><br>${details.type}</div>` : ''}
+                </div>
+                
+                <!-- Essential Care -->
+                <div class="modal-details">
+                    <h3>🌱 Essential Care</h3>
+                    <p><strong>💧 Watering:</strong> ${details.watering || 'Moderate'} ${details.watering_period ? `(${details.watering_period})` : ''}</p>
+                    ${details.watering_general_benchmark?.value ? `<p style="margin-left: 20px; font-size: 14px;">→ About ${details.watering_general_benchmark.value} ${details.watering_general_benchmark.unit || ''} per watering</p>` : ''}
+                    
+                    <p><strong>☀️ Sunlight:</strong> ${Array.isArray(details.sunlight) ? details.sunlight.join(', ') : details.sunlight || 'Partial sun'}</p>
+                    
+                    ${details.humidity ? `<p><strong>💦 Humidity:</strong> ${details.humidity}%</p>` : ''}
+                    ${details.atmospheric_humidity ? `<p><strong>💦 Humidity:</strong> ${details.atmospheric_humidity}</p>` : ''}
+                    
+                    <!-- Temperature -->
+                    ${(details.temperature_min || details.hardiness?.min) ? `
+                        <p><strong>🌡️ Temperature:</strong> 
+                        ${details.temperature_min ? `Min ${details.temperature_min}°C` : ''}
+                        ${details.hardiness?.min ? ` • Hardiness zones ${details.hardiness.min}-${details.hardiness.max}` : ''}
+                        </p>
+                    ` : ''}
+                    
+                    <!-- Soil -->
+                    ${details.soil?.length ? `<p><strong>🪴 Soil:</strong> ${details.soil.join(', ')}</p>` : ''}
+                    ${(details.soil_ph_min || details.growth?.ph_minimum) ? `
+                        <p style="margin-left: 20px; font-size: 14px;">→ pH: ${details.soil_ph_min || details.growth?.ph_minimum} - ${details.soil_ph_max || details.growth?.ph_maximum}</p>
+                    ` : ''}
+                </div>
+                
+                <!-- Plant Characteristics -->
+                ${(details.dimensions?.height || details.specifications?.average_height || details.flowering_season || details.leaf_color?.length) ? `
+                <div class="modal-details">
+                    <h3>📏 Plant Characteristics</h3>
+                    ${details.dimensions?.height ? `<p><strong>Height:</strong> ${details.dimensions.min_value}-${details.dimensions.max_value} ${details.dimensions.unit}</p>` : ''}
+                    ${details.specifications?.average_height ? `<p><strong>Average Height:</strong> ${details.specifications.average_height.cm} cm</p>` : ''}
+                    ${details.specifications?.maximum_height ? `<p><strong>Max Height:</strong> ${details.specifications.maximum_height.cm} cm</p>` : ''}
+                    ${details.flowering_season ? `<p><strong>🌸 Flowering:</strong> ${details.flowering_season}</p>` : ''}
+                    ${details.flower_color ? `<p><strong>🎨 Flower Color:</strong> ${details.flower_color}</p>` : ''}
+                    ${details.leaf_color?.length ? `<p><strong>🍃 Leaf Color:</strong> ${details.leaf_color.join(', ')}</p>` : ''}
+                    ${details.attracts?.length ? `<p><strong>🦋 Attracts:</strong> ${details.attracts.join(', ')}</p>` : ''}
+                </div>
+                ` : ''}
+                
+                <!-- Maintenance & Care -->
+                ${(details.maintenance || details.pruning_month?.length || details.fertilizer || details.propagation?.length) ? `
+                <div class="modal-details">
+                    <h3>🛠️ Maintenance & Care</h3>
+                    ${details.maintenance ? `<p><strong>Maintenance Level:</strong> ${details.maintenance}</p>` : ''}
+                    ${details.pruning_month?.length ? `<p><strong>✂️ Pruning Months:</strong> ${details.pruning_month.join(', ')}</p>` : ''}
+                    ${details.pruning_count?.amount ? `<p style="margin-left: 20px; font-size: 14px;">→ Prune ${details.pruning_count.amount} times per ${details.pruning_count.interval}</p>` : ''}
+                    ${details.fertilizer ? `<p><strong>🧪 Fertilizer:</strong> ${details.fertilizer}</p>` : ''}
+                    ${details.propagation?.length ? `<p><strong>🌱 Propagation:</strong> ${details.propagation.join(', ')}</p>` : ''}
+                </div>
+                ` : ''}
+                
+                <!-- Special Features & Warnings -->
+                <div class="modal-details">
+                    <h3>⚠️ Important Information</h3>
+                    ${details.indoor !== undefined ? `<p><strong>🏠 Indoor Suitable:</strong> ${details.indoor ? 'Yes ✅' : 'No ❌'}</p>` : ''}
+                    ${details.poisonous_to_pets ? `<p style="color: #c65d00;"><strong>🐕 Pet Safe:</strong> No - Toxic to pets ⚠️</p>` : '<p style="color: #2d5016;"><strong>🐕 Pet Safe:</strong> Yes ✅</p>'}
+                    ${details.poison_effects_to_pets ? `<p style="margin-left: 20px; font-size: 14px; color: #c65d00;">→ ${details.poison_effects_to_pets}</p>` : ''}
+                    ${details.poisonous_to_humans ? `<p style="color: #c65d00;"><strong>👶 Child Safe:</strong> No - Toxic to humans ⚠️</p>` : ''}
+                    ${details.edible ? `<p style="color: #2d5016;"><strong>🍽️ Edible:</strong> Yes ${details.edible_part?.length ? `(${details.edible_part.join(', ')})` : ''}</p>` : ''}
+                    ${details.medicinal ? `<p><strong>💊 Medicinal:</strong> Yes</p>` : ''}
+                    ${details.drought_tolerant ? `<p><strong>🏜️ Drought Tolerant:</strong> Yes</p>` : ''}
+                    ${details.salt_tolerant ? `<p><strong>🌊 Salt Tolerant:</strong> Yes</p>` : ''}
+                    ${details.invasive ? `<p style="color: #c65d00;"><strong>⚠️ Invasive:</strong> Yes - Control spread</p>` : ''}
+                    ${details.thorny ? `<p><strong>🌹 Thorny:</strong> Yes - Handle with care</p>` : ''}
+                    ${details.rare ? `<p style="color: #87a96b;"><strong>💎 Rare:</strong> Yes ${details.rare_level ? `(${details.rare_level})` : ''}</p>` : ''}
+                </div>
+                
+                <!-- Detailed Description -->
+                ${details.description ? `
+                <div class="modal-details">
+                    <h3>📖 About This Plant</h3>
+                    <p>${details.description}</p>
+                </div>
+                ` : ''}
+                
+                <!-- Pests & Problems -->
+                ${details.pest_susceptibility?.length ? `
+                <div class="modal-details">
+                    <h3>🐛 Common Pests</h3>
+                    <p>${details.pest_susceptibility.join(', ')}</p>
+                </div>
+                ` : ''}
+                
+                <!-- Origin -->
+                ${details.origin?.length ? `
+                <div class="modal-details">
+                    <h3>🌍 Native Origin</h3>
+                    <p>${details.origin.join(', ')}</p>
+                </div>
+                ` : ''}
+                
+                <div class="modal-actions">
+                    <button class="btn-primary add-to-tracker">Add to My Tracker</button>
+                    <button class="btn-secondary close-modal">Close</button>
                 </div>
             `;
+            
+            // Add event listeners
+            modalContent.querySelector('.modal-close').addEventListener('click', () => modal.remove());
+            modalContent.querySelector('.close-modal').addEventListener('click', () => modal.remove());
+            modalContent.querySelector('.add-to-tracker').addEventListener('click', () => {
+                addToTracker(plantName, wateringDays);
+            });
+            
+            modal.innerHTML = '';
+            modal.appendChild(modalContent);
         }
     } catch (error) {
         console.error('Error getting plant details:', error);
@@ -655,30 +797,36 @@ async function loadFeaturedPlants() {
     
     featuredGrid.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">Loading featured plants...</p>';
     
-    const plantCards = [];
+    featuredGrid.innerHTML = '';
+    
     for (const plantName of featuredPlants) {
         try {
             const results = await window.plantAPI.searchPlants(plantName);
             if (results && results[0]) {
                 const plant = results[0];
-                plantCards.push(`
-                    <div class="featured-plant-card" onclick="viewPlantDetails('${plant.common_name.replace(/'/g, "\\'")}', ${plant.id}, '${plant.source}')">
-                        ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="featured-plant-image">` : '<div class="featured-plant-image" style="background: linear-gradient(135deg, #a8d5a8 0%, #87a96b 100%); display: flex; align-items: center; justify-content: center; font-size: 60px;">🌿</div>'}
-                        <div class="featured-plant-info">
-                            <div class="featured-plant-name">${plant.common_name}</div>
-                            <div class="featured-plant-details">Click to view care guide</div>
-                        </div>
+                
+                const card = document.createElement('div');
+                card.className = 'featured-plant-card';
+                card.innerHTML = `
+                    ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="featured-plant-image">` : '<div class="featured-plant-image" style="background: linear-gradient(135deg, #a8d5a8 0%, #87a96b 100%); display: flex; align-items: center; justify-content: center; font-size: 60px;">🌿</div>'}
+                    <div class="featured-plant-info">
+                        <div class="featured-plant-name">${plant.common_name}</div>
+                        <div class="featured-plant-details">Click to view care guide</div>
                     </div>
-                `);
+                `;
+                
+                card.addEventListener('click', () => {
+                    viewPlantDetails(plant.common_name, plant.id, plant.source);
+                });
+                
+                featuredGrid.appendChild(card);
             }
         } catch (error) {
             console.error(`Error loading ${plantName}:`, error);
         }
     }
     
-    if (plantCards.length > 0) {
-        featuredGrid.innerHTML = plantCards.join('');
-    } else {
+    if (featuredGrid.children.length === 0) {
         featuredGrid.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">Featured plants coming soon!</p>';
     }
 }

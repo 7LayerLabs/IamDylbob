@@ -38,10 +38,30 @@ export const googleProvider = new GoogleAuthProvider();
 // Auth functions
 export async function signInWithGoogle() {
     try {
+        // Set custom parameters
+        googleProvider.setCustomParameters({
+            prompt: 'select_account'
+        });
+        
         const result = await signInWithPopup(auth, googleProvider);
+        console.log('Sign in successful:', result.user.email);
         return result.user;
     } catch (error) {
         console.error("Error signing in:", error);
+        
+        // Handle specific error codes
+        if (error.code === 'auth/popup-blocked') {
+            alert('Please allow popups for this site to sign in with Google');
+        } else if (error.code === 'auth/cancelled-popup-request') {
+            console.log('Popup cancelled by user');
+        } else if (error.code === 'auth/popup-closed-by-user') {
+            console.log('User closed the popup');
+        } else if (error.code === 'auth/unauthorized-domain') {
+            alert('This domain is not authorized for Google Sign-In. Please contact support.');
+        } else {
+            alert(`Sign-in error: ${error.message}`);
+        }
+        
         throw error;
     }
 }

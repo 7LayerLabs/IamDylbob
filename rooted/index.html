@@ -57,7 +57,7 @@
             <!-- Main Plant Search -->
             <div class="hero-search-container">
                 <div class="hero-search-box">
-                    <input type="text" id="heroPlantSearch" placeholder="Search any plant... Try 'Monstera' or 'Snake Plant'">
+                    <input type="text" id="heroPlantSearch" placeholder="Search any plant... Try 'Monstera' or 'Snake Plant'" onkeyup="if(event.key === 'Enter') heroSearchPlant()">
                     <button class="btn-hero-search" onclick="heroSearchPlant()">
                         <span>🔍 Search</span>
                     </button>
@@ -330,16 +330,31 @@
     <script src="plant-api.js"></script>
     <script src="script.js"></script>
     <script type="module">
-        import { createAuthUI } from './auth-ui.js';
-        import * as authModule from './auth-ui.js';
-        
-        // Make auth module globally accessible
-        window.authModule = authModule;
-        
-        // Initialize auth UI when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            createAuthUI();
-        });
+        // Wrap in try-catch to handle any import errors
+        try {
+            import('./auth-ui.js').then(module => {
+                window.authModule = module;
+                
+                // Wait for DOM to be ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        module.createAuthUI();
+                    });
+                } else {
+                    // DOM already loaded
+                    module.createAuthUI();
+                }
+            }).catch(error => {
+                console.error('Failed to load auth module:', error);
+                // Create a simple fallback message
+                const authFallback = document.createElement('div');
+                authFallback.style.cssText = 'position: fixed; top: 70px; right: 20px; background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; z-index: 9999;';
+                authFallback.textContent = 'Auth loading...';
+                document.body.appendChild(authFallback);
+            });
+        } catch (error) {
+            console.error('Module import not supported:', error);
+        }
     </script>
 </body>
 </html>

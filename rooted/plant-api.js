@@ -157,50 +157,209 @@ class PlantAPIService {
         return null;
     }
 
-    // Format Perenual API response
+    // Format Perenual API response with ALL available data
     formatPerenualDetails(data) {
         return {
             id: data.id,
             common_name: data.common_name,
             scientific_name: data.scientific_name || [],
             other_names: data.other_name || [],
+            family: data.family,
+            origin: data.origin || [],
+            type: data.type,
+            dimension: data.dimension,
+            dimensions: {
+                height: data.dimensions?.height || null,
+                width: data.dimensions?.width || null,
+                min_value: data.dimensions?.min_value,
+                max_value: data.dimensions?.max_value,
+                unit: data.dimensions?.unit
+            },
+            cycle: data.cycle,
+            attracts: data.attracts || [],
             watering: data.watering,
             watering_period: data.watering_period,
+            watering_general_benchmark: {
+                value: data.watering_general_benchmark?.value,
+                unit: data.watering_general_benchmark?.unit
+            },
+            depth_water_requirement: {
+                value: data.depth_water_requirement?.value,
+                unit: data.depth_water_requirement?.unit
+            },
+            volume_water_requirement: {
+                value: data.volume_water_requirement?.value,
+                unit: data.volume_water_requirement?.unit
+            },
             sunlight: data.sunlight || [],
+            pruning_month: data.pruning_month || [],
+            pruning_count: {
+                amount: data.pruning_count?.amount,
+                interval: data.pruning_count?.interval
+            },
+            seeds: data.seeds,
+            flowering_season: data.flowering_season,
+            flower_color: data.flower_color,
+            harvest_season: data.harvest_season,
+            harvest_method: data.harvest_method,
+            leaf: data.leaf,
+            leaf_color: data.leaf_color || [],
+            growth_rate: data.growth_rate,
+            maintenance: data.maintenance,
             care_level: data.care_level,
             description: data.description,
-            maintenance: data.maintenance,
-            growth_rate: data.growth_rate,
+            medicinal: data.medicinal,
+            edible_leaf: data.edible_leaf,
+            edible_fruit: data.edible_fruit,
+            cuisine: data.cuisine,
             drought_tolerant: data.drought_tolerant,
+            salt_tolerant: data.salt_tolerant,
+            thorny: data.thorny,
+            invasive: data.invasive,
+            rare: data.rare,
+            rare_level: data.rare_level,
+            tropical: data.tropical,
             indoor: data.indoor,
+            flowers: data.flowers,
+            cones: data.cones,
+            fruits: data.fruits,
             poisonous_to_pets: data.poisonous_to_pets,
             poisonous_to_humans: data.poisonous_to_humans,
+            poison_effects_to_pets: data.poison_effects_to_pets,
+            poison_effects_to_humans: data.poison_effects_to_humans,
+            pest_susceptibility: data.pest_susceptibility || [],
+            pest_susceptibility_api: data.pest_susceptibility_api,
             humidity: data.humidity,
             soil: data.soil || [],
             fertilizer: data.fertilizing,
+            hardiness: {
+                min: data.hardiness?.min,
+                max: data.hardiness?.max
+            },
+            hardiness_location: {
+                full_url: data.hardiness_location?.full_url,
+                full_iframe: data.hardiness_location?.full_iframe
+            },
             pruning_tips: data.pruning_tips,
             propagation: data.propagation || [],
+            care_guides: data.care_guides,
+            section: data.section || [],
             image: data.default_image?.original_url || data.default_image?.medium_url,
+            images: {
+                leaf: data.images?.leaf || [],
+                flower: data.images?.flower || [],
+                fruit: data.images?.fruit || [],
+                bark: data.images?.bark || [],
+                other: data.images?.other || []
+            },
             source: 'perenual'
         };
     }
 
-    // Format Trefle API response
+    // Format Trefle API response with ALL available data
     formatTrefleDetails(data) {
         return {
             id: data.id,
             common_name: data.common_name,
             scientific_name: data.scientific_name,
+            slug: data.slug,
             family: data.family_common_name,
+            family_scientific: data.family,
+            genus: data.genus,
+            year: data.year,
+            bibliography: data.bibliography,
+            author: data.author,
+            status: data.status,
+            rank: data.rank,
+            synonyms: data.synonyms || [],
+            observations: data.observations,
+            vegetable: data.vegetable,
+            edible: data.edible,
+            edible_part: data.edible_part || [],
+            
+            // Distribution data
+            distribution: {
+                native: data.distribution?.native || [],
+                introduced: data.distribution?.introduced || []
+            },
+            distributions: data.distributions,
+            
+            // Flower data
+            flower: {
+                color: data.flower?.color || [],
+                conspicuous: data.flower?.conspicuous
+            },
+            
+            // Foliage data  
+            foliage: {
+                texture: data.foliage?.texture,
+                color: data.foliage?.color || [],
+                leaf_retention: data.foliage?.leaf_retention,
+                deciduous: data.foliage?.deciduous
+            },
+            
+            // Fruit/Seed data
+            fruit_or_seed: {
+                conspicuous: data.fruit_or_seed?.conspicuous,
+                color: data.fruit_or_seed?.color || [],
+                shape: data.fruit_or_seed?.shape,
+                seed_persistence: data.fruit_or_seed?.seed_persistence
+            },
+            
+            // Growth specifications
+            specifications: {
+                ligneous_type: data.specifications?.ligneous_type,
+                growth_form: data.specifications?.growth_form,
+                growth_habit: data.specifications?.growth_habit,
+                growth_rate: data.specifications?.growth_rate,
+                average_height: data.specifications?.average_height,
+                maximum_height: data.specifications?.maximum_height,
+                nitrogen_fixation: data.specifications?.nitrogen_fixation,
+                shape_orientation: data.specifications?.shape_orientation,
+                toxicity: data.specifications?.toxicity
+            },
+            
+            // Detailed growth data
+            growth: {
+                description: data.growth?.description,
+                sowing: data.growth?.sowing,
+                days_to_harvest: data.growth?.days_to_harvest,
+                row_spacing: data.growth?.row_spacing,
+                spread: data.growth?.spread,
+                ph_minimum: data.growth?.ph_minimum,
+                ph_maximum: data.growth?.ph_maximum,
+                light: data.growth?.light,
+                atmospheric_humidity: data.growth?.atmospheric_humidity,
+                growth_months: data.growth?.growth_months || [],
+                bloom_months: data.growth?.bloom_months || [],
+                fruit_months: data.growth?.fruit_months || [],
+                minimum_precipitation: data.growth?.minimum_precipitation,
+                maximum_precipitation: data.growth?.maximum_precipitation,
+                minimum_root_depth: data.growth?.minimum_root_depth,
+                minimum_temperature: data.growth?.minimum_temperature,
+                maximum_temperature: data.growth?.maximum_temperature,
+                soil_nutriments: data.growth?.soil_nutriments,
+                soil_salinity: data.growth?.soil_salinity,
+                soil_texture: data.growth?.soil_texture,
+                soil_humidity: data.growth?.soil_humidity,
+                drought_tolerance: data.growth?.drought_tolerance,
+                frost_tolerance: data.growth?.frost_tolerance,
+                salinity_tolerance: data.growth?.salinity_tolerance,
+                shade_tolerance: data.growth?.shade_tolerance,
+                fertility_requirement: data.growth?.fertility_requirement
+            },
+            
+            // Calculated/derived values
             watering: this.getTrefleWatering(data.growth),
             sunlight: this.getTrefleSunlight(data.growth),
             temperature_min: data.growth?.minimum_temperature?.deg_c,
-            growth_rate: data.specifications?.growth_rate,
-            drought_tolerant: data.growth?.drought_tolerance,
             soil_ph_min: data.growth?.ph_minimum,
             soil_ph_max: data.growth?.ph_maximum,
-            fertilizer: data.growth?.fertility_requirement,
+            
+            // Images
             image: data.image_url,
+            images: data.images || {},
+            
             source: 'trefle'
         };
     }

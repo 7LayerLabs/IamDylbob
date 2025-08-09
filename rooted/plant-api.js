@@ -75,13 +75,17 @@ class PlantAPIService {
 
         if (source === 'perenual') {
             try {
+                console.log(`Fetching Perenual details for ID: ${plantId}`);
                 // First try the details endpoint
                 let response = await fetch(
                     `${this.perenualBase}/species/details/${plantId}?key=${PERENUAL_API_KEY}`
                 );
                 
+                console.log(`Perenual response status: ${response.status}`);
+                
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('Perenual raw data:', data);
                     details = this.formatPerenualDetails(data);
                     
                     // If we got limited data, try the care-guide endpoint for more info
@@ -103,18 +107,31 @@ class PlantAPIService {
                             console.log('Care guide fetch error:', careError);
                         }
                     }
+                } else {
+                    console.error(`Perenual API error: ${response.status} ${response.statusText}`);
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
                 }
             } catch (error) {
                 console.error('Perenual details error:', error);
             }
         } else if (source === 'trefle') {
             try {
+                console.log(`Fetching Trefle details for ID: ${plantId}`);
                 const response = await fetch(
                     `${this.trefleBase}/plants/${plantId}?token=${TREFLE_API_KEY}`
                 );
+                
+                console.log(`Trefle response status: ${response.status}`);
+                
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('Trefle raw data:', data);
                     details = this.formatTrefleDetails(data.data);
+                } else {
+                    console.error(`Trefle API error: ${response.status} ${response.statusText}`);
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
                 }
             } catch (error) {
                 console.error('Trefle details error:', error);

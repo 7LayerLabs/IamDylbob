@@ -619,13 +619,21 @@ function quickSearch(plantName) {
 
 // View detailed plant information
 async function viewPlantDetails(plantName, plantId, source) {
+    console.log(`Loading details for: ${plantName}, ID: ${plantId}, Source: ${source}`);
+    
     const modal = document.createElement('div');
     modal.className = 'plant-modal';
     modal.innerHTML = '<div class="modal-content"><p>Loading plant details...</p></div>';
     document.body.appendChild(modal);
     
     try {
-        const details = await window.plantAPI.getPlantDetails(plantId, source);
+        // Add timeout to prevent infinite loading
+        const detailsPromise = window.plantAPI.getPlantDetails(plantId, source);
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Request timeout')), 10000)
+        );
+        
+        const details = await Promise.race([detailsPromise, timeoutPromise]);
         
         if (details) {
             const modalContent = document.createElement('div');
@@ -762,15 +770,63 @@ async function viewPlantDetails(plantName, plantId, source) {
             
             modal.innerHTML = '';
             modal.appendChild(modalContent);
+        } else {
+            // No details returned, show basic info
+            console.log('No details returned from API');
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="this.closest('.plant-modal').remove()">×</button>
+                    <h2>${plantName}</h2>
+                    <div class="modal-details">
+                        <p>Limited information available for this plant.</p>
+                        <p><strong>Plant Name:</strong> ${plantName}</p>
+                        <p><strong>Source:</strong> ${source}</p>
+                        <p><strong>ID:</strong> ${plantId}</p>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-primary add-default-plant">Add to Tracker (7 day default)</button>
+                        <button class="btn-secondary close-modal">Close</button>
+                    </div>
+                </div>
+            `;
+            // Add event listeners for fallback modal
+            modal.querySelector('.modal-close')?.addEventListener('click', () => modal.remove());
+            modal.querySelector('.close-modal')?.addEventListener('click', () => modal.remove());
+            modal.querySelector('.add-default-plant')?.addEventListener('click', () => {
+                addToTracker(plantName, 7);
+                modal.remove();
+            });
         }
     } catch (error) {
         console.error('Error getting plant details:', error);
-        modal.innerHTML = `
-            <div class="modal-content">
-                <button class="modal-close" onclick="this.closest('.plant-modal').remove()">×</button>
-                <p>Could not load plant details</p>
+        // Show error with option to still add plant
+        const errorModal = document.createElement('div');
+        errorModal.innerHTML = `
+            <button class="modal-close">×</button>
+            <h2>${plantName}</h2>
+            <div class="modal-details" style="color: #c65d00;">
+                <p><strong>Error loading details:</strong> ${error.message || 'Unknown error'}</p>
+                <p>The plant information service may be temporarily unavailable.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary add-error-plant">Add to Tracker Anyway</button>
+                <button class="btn-secondary close-modal">Close</button>
             </div>
         `;
+        
+        modal.innerHTML = '';
+        const modalContent = document.createElement('div');
+        modalContent.className = 'modal-content';
+        modalContent.innerHTML = errorModal.innerHTML;
+        modal.appendChild(modalContent);
+        
+        // Add event listeners for error modal
+        modal.querySelector('.modal-close')?.addEventListener('click', () => modal.remove());
+        modal.querySelector('.close-modal')?.addEventListener('click', () => modal.remove());
+        modal.querySelector('.add-error-plant')?.addEventListener('click', () => {
+            addToTracker(plantName, 7);
+            modal.remove();
+        });
     }
 }
 

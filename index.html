@@ -3,656 +3,358 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DylBob</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #000;
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Animated background particles */
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-            opacity: 0;
-            animation: float 15s infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* Container for text elements */
-        .text-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 10;
-            position: relative;
-        }
-
-        /* "I am" text styling */
-        .prefix-text {
-            font-size: clamp(1rem, 3vw, 2rem);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: -0.5rem;
-            background: linear-gradient(
-                45deg,
-                #ffffff,
-                #ff00ff,
-                #00ffff,
-                #ffffff
-            );
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 3s ease infinite;
-            filter: contrast(1.2) brightness(1.1);
-        }
-
-        /* Main text styling */
-        .main-text {
-            font-size: clamp(3rem, 10vw, 8rem);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            position: relative;
-            z-index: 10;
-            text-shadow: 
-                0 0 5px rgba(255, 255, 255, 0.9),
-                0 0 10px rgba(255, 0, 255, 0.6),
-                0 0 15px rgba(0, 255, 255, 0.6),
-                0 0 20px rgba(255, 0, 255, 0.4),
-                0 0 25px rgba(0, 255, 255, 0.4);
-        }
-
-        /* Gradient text effect */
-        .main-text {
-            background: linear-gradient(
-                45deg,
-                #ffffff,
-                #ff00ff,
-                #00ffff,
-                #ffffff
-            );
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 3s ease infinite;
-            filter: contrast(1.2) brightness(1.1);
-        }
-
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Pulse effect on hover */
-        .main-text:hover {
-            animation: pulse 1s infinite, gradient 3s ease infinite;
-            cursor: pointer;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Scanline effect */
-        .scanline {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.1);
-            animation: scan 8s linear infinite;
-            z-index: 5;
-        }
-
-        @keyframes scan {
-            0% {
-                top: 0;
-            }
-            100% {
-                top: 100%;
-            }
-        }
-
-        /* Link bubble styles */
-        .link-bubble {
-            position: fixed;
-            bottom: -100px;
-            right: 50px;
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #e23636 0%, #b71c1c 100%);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            animation: popUp 1s ease-out 2s forwards, float-bubble 3s ease-in-out infinite;
-            z-index: 100;
-            box-shadow: 0 0 30px rgba(226, 54, 54, 0.6),
-                        0 0 60px rgba(183, 28, 28, 0.4);
-        }
-
-        @keyframes popUp {
-            0% {
-                bottom: -100px;
-                transform: scale(0) rotate(0deg);
-            }
-            50% {
-                transform: scale(1.2) rotate(180deg);
-            }
-            100% {
-                bottom: 50px;
-                transform: scale(1) rotate(360deg);
-            }
-        }
-
-        @keyframes float-bubble {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-20px) scale(1.05);
-            }
-        }
-
-        .link-bubble::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #e23636 0%, #b71c1c 100%);
-            filter: blur(20px);
-            opacity: 0.5;
-            z-index: -1;
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0.8;
-            }
-        }
-
-        .link-bubble:hover {
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: 0 0 50px rgba(226, 54, 54, 0.8),
-                        0 0 100px rgba(183, 28, 28, 0.6);
-        }
-
-        .link-bubble-text {
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: center;
-            animation: text-glow 2s ease-in-out infinite;
-        }
-
-        @keyframes text-glow {
-            0%, 100% {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-            }
-            50% {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 1),
-                           0 0 30px rgba(255, 255, 255, 0.8);
-            }
-        }
-
-        /* Ripple effect on click */
-        .link-bubble.clicked::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            animation: ripple 0.6s ease-out;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-
-        /* Secret Mission Bubble */
-        .secret-bubble {
-            position: fixed;
-            top: -150px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #555555 100%);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            animation: dropDown 2s ease-out 3s forwards, secretPulse 4s ease-in-out infinite;
-            z-index: 100;
-            box-shadow: 0 0 30px rgba(100, 100, 100, 0.8),
-                        0 0 60px rgba(50, 50, 50, 0.6),
-                        inset 0 0 20px rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        @keyframes dropDown {
-            0% {
-                top: -150px;
-                transform: translateX(-50%) rotate(0deg) scale(0);
-            }
-            50% {
-                transform: translateX(-50%) rotate(180deg) scale(1.2);
-            }
-            70% {
-                top: 60px;
-                transform: translateX(-50%) rotate(270deg) scale(0.9);
-            }
-            85% {
-                top: 40px;
-                transform: translateX(-50%) rotate(340deg) scale(1.1);
-            }
-            100% {
-                top: 50px;
-                transform: translateX(-50%) rotate(360deg) scale(1);
-            }
-        }
-
-        @keyframes secretPulse {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0) scale(1);
-                box-shadow: 0 0 30px rgba(100, 100, 100, 0.8),
-                           0 0 60px rgba(50, 50, 50, 0.6),
-                           inset 0 0 20px rgba(255, 255, 255, 0.1);
-            }
-            25% {
-                transform: translateX(-50%) translateY(-10px) scale(1.05);
-            }
-            50% {
-                transform: translateX(-50%) translateY(0) scale(1);
-                box-shadow: 0 0 50px rgba(150, 150, 150, 1),
-                           0 0 100px rgba(100, 100, 100, 0.8),
-                           inset 0 0 30px rgba(255, 255, 255, 0.2);
-            }
-            75% {
-                transform: translateX(-50%) translateY(10px) scale(0.95);
-            }
-        }
-
-        .secret-bubble::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .secret-bubble:hover {
-            transform: translateX(-50%) scale(1.15);
-            box-shadow: 0 0 50px rgba(200, 200, 200, 1),
-                        0 0 100px rgba(150, 150, 150, 0.8),
-                        inset 0 0 40px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(135deg, #2a2a2a 0%, #444444 50%, #666666 100%);
-        }
-
-        .secret-bubble-text {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
-                        0 0 20px rgba(255, 255, 255, 0.3);
-            animation: secretTextGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes secretTextGlow {
-            0%, 100% {
-                opacity: 0.7;
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            }
-            50% {
-                opacity: 1;
-                text-shadow: 0 0 20px rgba(255, 255, 255, 1),
-                           0 0 30px rgba(255, 255, 255, 0.8);
-            }
-        }
-
-        /* Secret mission reveal effect */
-        .secret-bubble.activated::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.8);
-            animation: secretRipple 1s ease-out;
-        }
-
-        @keyframes secretRipple {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-                border-color: rgba(255, 255, 255, 1);
-            }
-            100% {
-                transform: scale(3);
-                opacity: 0;
-                border-color: rgba(255, 255, 255, 0);
-            }
-        }
-
-        /* TGRGreen Bubble */
-        .tgrgreen-bubble {
-            position: fixed;
-            bottom: -100px;
-            left: 50px;
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #00ff00 0%, #008800 50%, #004400 100%);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            animation: slideUp 1.5s ease-out 2.5s forwards, greenFloat 4s ease-in-out infinite;
-            z-index: 100;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6),
-                        0 0 60px rgba(0, 136, 0, 0.4),
-                        inset 0 0 20px rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(0, 255, 0, 0.3);
-        }
-
-        @keyframes slideUp {
-            0% {
-                bottom: -100px;
-                transform: scale(0) rotate(0deg);
-            }
-            40% {
-                transform: scale(1.3) rotate(180deg);
-            }
-            70% {
-                bottom: 60px;
-                transform: scale(0.9) rotate(270deg);
-            }
-            85% {
-                bottom: 45px;
-                transform: scale(1.1) rotate(340deg);
-            }
-            100% {
-                bottom: 50px;
-                transform: scale(1) rotate(360deg);
-            }
-        }
-
-        @keyframes greenFloat {
-            0%, 100% {
-                transform: translateY(0) translateX(0) scale(1);
-                box-shadow: 0 0 30px rgba(0, 255, 0, 0.6),
-                           0 0 60px rgba(0, 136, 0, 0.4);
-            }
-            25% {
-                transform: translateY(-15px) translateX(5px) scale(1.05);
-            }
-            50% {
-                transform: translateY(0) translateX(-5px) scale(1);
-                box-shadow: 0 0 50px rgba(0, 255, 0, 0.8),
-                           0 0 100px rgba(0, 200, 0, 0.6);
-            }
-            75% {
-                transform: translateY(10px) translateX(3px) scale(0.95);
-            }
-        }
-
-        .tgrgreen-bubble::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,255,0,0.3) 0%, transparent 70%);
-            filter: blur(15px);
-            animation: greenPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes greenPulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1.3);
-                opacity: 0.8;
-            }
-        }
-
-        .tgrgreen-bubble:hover {
-            transform: scale(1.2) rotate(-5deg);
-            box-shadow: 0 0 50px rgba(0, 255, 0, 1),
-                        0 0 100px rgba(0, 200, 0, 0.8),
-                        inset 0 0 40px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(135deg, #00ff00 0%, #00aa00 50%, #006600 100%);
-        }
-
-        .tgrgreen-bubble-text {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8),
-                        0 0 20px rgba(0, 200, 0, 0.6);
-            animation: greenTextGlow 2.5s ease-in-out infinite;
-        }
-
-        @keyframes greenTextGlow {
-            0%, 100% {
-                text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
-            }
-            50% {
-                text-shadow: 0 0 20px rgba(0, 255, 0, 1),
-                           0 0 30px rgba(0, 255, 0, 0.8),
-                           0 0 40px rgba(0, 200, 0, 0.6);
-            }
-        }
-
-        /* TGRGreen ripple effect */
-        .tgrgreen-bubble.clicked::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid rgba(0, 255, 0, 0.8);
-            animation: greenRipple 0.8s ease-out;
-        }
-
-        @keyframes greenRipple {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-                border-color: rgba(0, 255, 0, 1);
-            }
-            100% {
-                transform: scale(2.5);
-                opacity: 0;
-                border-color: rgba(0, 255, 0, 0);
-            }
-        }
-    </style>
+    <title>Rooted With Eva - Indoor Plant Care for New England</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    <div class="scanline"></div>
-    <div class="text-container">
-        <span class="prefix-text">I am</span>
-        <h1 class="main-text">DylBob</h1>
+    <!-- Background Decorations -->
+    <div class="background-plants">
+        <div class="bg-leaf leaf-1">🌿</div>
+        <div class="bg-leaf leaf-2">🍃</div>
+        <div class="bg-leaf leaf-3">🌱</div>
+        <div class="bg-leaf leaf-4">🍀</div>
+        <div class="bg-leaf leaf-5">🌾</div>
+        <div class="bg-leaf leaf-6">🌿</div>
+        <div class="bg-leaf leaf-7">🍃</div>
+        <div class="bg-leaf leaf-8">🌺</div>
+        <div class="bg-leaf leaf-9">🌸</div>
+        <div class="bg-leaf leaf-10">🌼</div>
+        <div class="bg-vine vine-left"></div>
+        <div class="bg-vine vine-right"></div>
     </div>
-    
-    <!-- Link Bubble -->
-    <a href="marvel-legends-tracker/index.html" class="link-bubble" id="linkBubble">
-        <span class="link-bubble-text">Marvel</span>
-    </a>
-    
-    <!-- Secret Mission Bubble -->
-    <a href="opsystem/index.html" class="secret-bubble" id="secretBubble">
-        <span class="secret-bubble-text">Private<br>System</span>
-    </a>
-    
-    <!-- TGRGreen Bubble -->
-    <a href="rooted/index.html" class="tgrgreen-bubble" id="tgrgreenBubble">
-        <span class="tgrgreen-bubble-text">Rooted</span>
-    </a>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Rooted With Eva" class="logo-img">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#tips">Plant Tips</a></li>
+                <li><a href="#tracker">Water Tracker</a></li>
+                <li><a href="#new-england">NH Growing</a></li>
+                <li><a href="#fun-facts">Fun & Facts</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-    <script>
-        // Create floating particles
-        const particlesContainer = document.getElementById('particles');
-        const numberOfParticles = 50;
+    <!-- Hero Section with Plant Search -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <img src="images/logo.png" alt="Rooted With Eva" class="hero-logo">
+            <h1 class="hero-title">Discover Your Perfect Plant</h1>
+            <p class="hero-subtitle">Search 10,000+ plants for personalized care guides</p>
+            
+            <!-- Main Plant Search -->
+            <div class="hero-search-container">
+                <div class="hero-search-box">
+                    <input type="text" id="heroPlantSearch" placeholder="Search any plant... Try 'Monstera' or 'Snake Plant'" onkeyup="if(event.key === 'Enter') heroSearchPlant()">
+                    <button class="btn-hero-search" onclick="heroSearchPlant()">
+                        <span>🔍 Search</span>
+                    </button>
+                </div>
+                <div class="search-suggestions">
+                    <span class="suggestion-label">Popular:</span>
+                    <button onclick="quickSearch('Pothos')">Pothos</button>
+                    <button onclick="quickSearch('Monstera')">Monstera</button>
+                    <button onclick="quickSearch('Snake Plant')">Snake Plant</button>
+                    <button onclick="quickSearch('Peace Lily')">Peace Lily</button>
+                    <button onclick="quickSearch('Fiddle Leaf Fig')">Fiddle Leaf Fig</button>
+                </div>
+            </div>
+            
+            <div id="heroSearchResults" class="hero-search-results"></div>
+            
+            <div class="hero-features">
+                <div class="feature-pill">
+                    <span class="feature-icon">🌱</span>
+                    <span>10,000+ Plants</span>
+                </div>
+                <div class="feature-pill">
+                    <span class="feature-icon">💧</span>
+                    <span>Custom Care Guides</span>
+                </div>
+                <div class="feature-pill">
+                    <span class="feature-icon">📱</span>
+                    <span>Track & Sync Anywhere</span>
+                </div>
+            </div>
+        </div>
+        <div class="floating-leaves">
+            <span class="leaf">🍃</span>
+            <span class="leaf">🌿</span>
+            <span class="leaf">🍀</span>
+        </div>
+    </section>
+    
+    <!-- Featured Plants Section -->
+    <section class="featured-plants">
+        <div class="container">
+            <h2 class="section-title">🌟 Trending Plants This Week</h2>
+            <div id="featuredPlantsGrid" class="featured-plants-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
 
-        for (let i = 0; i < numberOfParticles; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 15 + 's';
-            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-            particlesContainer.appendChild(particle);
+    <!-- Plant Tips Section -->
+    <section id="tips" class="section tips-section">
+        <div class="container">
+            <h2 class="section-title">Indoor Plant Care Tips</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">💧</div>
+                    <h3>Watering Wisdom</h3>
+                    <p>Check soil moisture with your finger. Most houseplants prefer slightly dry soil between waterings. In NH winters, reduce watering frequency as plants grow slower.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">☀️</div>
+                    <h3>Light Requirements</h3>
+                    <p>NH winters are dark! Move plants closer to south-facing windows or consider grow lights. Rotate plants weekly for even growth.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🌡️</div>
+                    <h3>Humidity Hacks</h3>
+                    <p>NH indoor air gets dry in winter. Group plants together, use pebble trays with water, or run a humidifier to keep tropical plants happy.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🌱</div>
+                    <h3>Fertilizing Schedule</h3>
+                    <p>Feed monthly in spring/summer, reduce to every 6-8 weeks in fall/winter. Use half-strength liquid fertilizer for most houseplants.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">✂️</div>
+                    <h3>Pruning & Propagation</h3>
+                    <p>Spring is perfect for pruning in NH! Save healthy cuttings to propagate in water. Share with friends or expand your collection!</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🐛</div>
+                    <h3>Pest Prevention</h3>
+                    <p>Check new plants for 2 weeks before introducing to your collection. Wipe leaves monthly with neem oil solution to prevent pests.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Water Tracker Section -->
+    <section id="tracker" class="section tracker-section">
+        <div class="container">
+            <h2 class="section-title">Plant Water Tracker</h2>
+            
+            <!-- Plant Search Section -->
+            <div class="plant-search-container">
+                <h3>🔍 Search Plant Database</h3>
+                <div class="search-box">
+                    <input type="text" id="plantSearch" placeholder="Search for any plant (e.g., Monstera, Snake Plant)">
+                    <button class="btn-search" onclick="searchPlantDatabase()">Search</button>
+                </div>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+            
+            <div class="tracker-container">
+                <div class="add-plant">
+                    <h3>Add Your Plant</h3>
+                    <input type="text" id="plantName" placeholder="Plant name (e.g., Pothos)">
+                    <input type="number" id="wateringDays" placeholder="Days between watering" min="1" max="30">
+                    <button class="btn-primary" onclick="addPlant()">Add Plant</button>
+                    <div id="suggestedCare" class="suggested-care"></div>
+                </div>
+                <div class="plants-list" id="plantsList">
+                    <!-- Plants will be added here dynamically -->
+                </div>
+            </div>
+            <div class="watering-calendar" id="wateringCalendar">
+                <h3>Upcoming Watering Schedule</h3>
+                <div id="calendarContent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New England Growing Section -->
+    <section id="new-england" class="section ne-section">
+        <div class="container">
+            <h2 class="section-title">New Hampshire Indoor Growing Guide</h2>
+            <div class="seasons-grid">
+                <div class="season-card winter">
+                    <h3>❄️ Winter (Dec-Feb)</h3>
+                    <ul>
+                        <li>Move plants away from cold windows at night</li>
+                        <li>Reduce watering - growth slows significantly</li>
+                        <li>Watch for dry air damage - mist regularly</li>
+                        <li>Best time for forcing bulbs indoors</li>
+                        <li>Keep plants away from heating vents</li>
+                    </ul>
+                </div>
+                <div class="season-card spring">
+                    <h3>🌸 Spring (Mar-May)</h3>
+                    <ul>
+                        <li>Time to repot root-bound plants</li>
+                        <li>Increase watering as growth resumes</li>
+                        <li>Start fertilizing again</li>
+                        <li>Perfect for taking cuttings</li>
+                        <li>Watch for late frost if moving plants outside</li>
+                    </ul>
+                </div>
+                <div class="season-card summer">
+                    <h3>☀️ Summer (Jun-Aug)</h3>
+                    <ul>
+                        <li>Some plants enjoy a "summer vacation" outdoors</li>
+                        <li>Increase watering frequency</li>
+                        <li>Watch for sunburn on leaves</li>
+                        <li>Great time to propagate succulents</li>
+                        <li>AC can dry air - monitor humidity</li>
+                    </ul>
+                </div>
+                <div class="season-card fall">
+                    <h3>🍂 Fall (Sep-Nov)</h3>
+                    <ul>
+                        <li>Bring outdoor plants in before first frost</li>
+                        <li>Check for hitchhiking pests</li>
+                        <li>Gradually reduce watering</li>
+                        <li>Last chance for major pruning</li>
+                        <li>Prepare grow lights for darker months</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nh-tips">
+                <h3>Special NH Considerations</h3>
+                <div class="tip-box">
+                    <p><strong>🏠 Old NH Homes:</strong> Drafty windows and uneven heating are common. Use draft stoppers and monitor temperature swings near windows.</p>
+                    <p><strong>🌡️ Temperature Swings:</strong> NH can have 40°F temperature differences in a day! Keep plants away from doors that open frequently.</p>
+                    <p><strong>💡 Short Winter Days:</strong> Consider full-spectrum LED grow lights for light-loving plants from November through February.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fun Facts & Jokes Section -->
+    <section id="fun-facts" class="section fun-section">
+        <div class="container">
+            <h2 class="section-title">Plant Fun Zone</h2>
+            <div class="fun-grid">
+                <div class="fun-card">
+                    <h3>🌺 Daily Plant Joke</h3>
+                    <p id="plantJoke" class="joke-text">Why did the gardener plant light bulbs? He wanted to grow a power plant!</p>
+                    <button class="btn-fun" onclick="getNewJoke()">New Joke!</button>
+                </div>
+                <div class="fun-card">
+                    <h3>🧠 Did You Know?</h3>
+                    <p id="plantFact" class="fact-text">The oldest known potted plant is over 200 years old! It's a Eastern Cape cycad at Kew Gardens in London.</p>
+                    <button class="btn-fun" onclick="getNewFact()">New Fact!</button>
+                </div>
+            </div>
+            <div class="plant-quiz">
+                <h3>🎯 Quick Plant Quiz</h3>
+                <div id="quizContainer">
+                    <p class="quiz-question">What's the best way to check if your plant needs water?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-btn" onclick="checkAnswer(this, true)">Stick your finger in the soil</button>
+                        <button class="quiz-btn" onclick="checkAnswer(this, false)">Water on a strict schedule</button>
+                        <button class="quiz-btn" onclick="checkAnswer(this, false)">Wait until leaves droop</button>
+                    </div>
+                    <p id="quizFeedback"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="section resources-section">
+        <div class="container">
+            <h2 class="section-title">Plant Parent Resources</h2>
+            <div class="resources-grid">
+                <div class="resource-category">
+                    <h3>🏪 NH Plant Shops</h3>
+                    <ul>
+                        <li><a href="https://www.google.com/search?q=plant+shops+nashua+nh" target="_blank">Local Nashua Plant Shops</a></li>
+                        <li><a href="https://www.google.com/search?q=farmers+market+new+hampshire+plants" target="_blank">NH Farmers Markets</a></li>
+                        <li><a href="https://www.google.com/search?q=garden+centers+southern+nh" target="_blank">Southern NH Garden Centers</a></li>
+                    </ul>
+                </div>
+                <div class="resource-category">
+                    <h3>📚 Learning Resources</h3>
+                    <ul>
+                        <li><a href="https://extension.unh.edu/gardens-landscapes" target="_blank">UNH Cooperative Extension</a></li>
+                        <li><a href="https://www.houseplantjournal.com/" target="_blank">House Plant Journal</a></li>
+                        <li><a href="https://www.thespruce.com/houseplants-4127750" target="_blank">The Spruce - Houseplants</a></li>
+                    </ul>
+                </div>
+                <div class="resource-category">
+                    <h3>🛠️ Plant Care Tools</h3>
+                    <ul>
+                        <li><a href="https://www.amazon.com/s?k=moisture+meter+plants" target="_blank">Moisture Meters</a></li>
+                        <li><a href="https://www.amazon.com/s?k=grow+lights+indoor+plants" target="_blank">Grow Lights</a></li>
+                        <li><a href="https://www.amazon.com/s?k=plant+humidifier" target="_blank">Humidifiers</a></li>
+                    </ul>
+                </div>
+                <div class="resource-category">
+                    <h3>🌿 Plant ID & Care Apps</h3>
+                    <ul>
+                        <li><a href="https://www.picturethisai.com/" target="_blank">PictureThis</a></li>
+                        <li><a href="https://www.plantnet.org/" target="_blank">PlantNet</a></li>
+                        <li><a href="https://getplanta.com/" target="_blank">Planta</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="emergency-care">
+                <h3>🚨 Plant Emergency Hotline</h3>
+                <div class="emergency-tips">
+                    <p><strong>Overwatered?</strong> Stop watering, improve drainage, check for root rot</p>
+                    <p><strong>Yellowing leaves?</strong> Could be overwatering, underwatering, or nutrient deficiency</p>
+                    <p><strong>Pests spotted?</strong> Isolate plant immediately, treat with neem oil or insecticidal soap</p>
+                    <p><strong>Drooping?</strong> Check soil moisture, temperature, and recent changes in environment</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>Made with 💚 for New Hampshire plant parents</p>
+                <p>Remember: Every expert was once a beginner. Happy growing!</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="plant-api.js"></script>
+    <script src="script.js"></script>
+    <script type="module">
+        // Wrap in try-catch to handle any import errors
+        try {
+            import('./auth-ui.js').then(module => {
+                window.authModule = module;
+                
+                // Wait for DOM to be ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        module.createAuthUI();
+                    });
+                } else {
+                    // DOM already loaded
+                    module.createAuthUI();
+                }
+            }).catch(error => {
+                console.error('Failed to load auth module:', error);
+                // Create a simple fallback message
+                const authFallback = document.createElement('div');
+                authFallback.style.cssText = 'position: fixed; top: 70px; right: 20px; background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; z-index: 9999;';
+                authFallback.textContent = 'Auth loading...';
+                document.body.appendChild(authFallback);
+            });
+        } catch (error) {
+            console.error('Module import not supported:', error);
         }
-
-        // Add interactive glow on mouse move
-        document.addEventListener('mousemove', (e) => {
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            
-            document.querySelector('.main-text').style.textShadow = `
-                0 0 ${5 + x * 10}px rgba(255, 255, 255, 0.9),
-                0 0 ${10 + x * 10}px rgba(255, 0, 255, 0.6),
-                0 0 ${15 + x * 10}px rgba(0, 255, 255, 0.6),
-                0 0 ${20 + y * 10}px rgba(255, 0, 255, 0.4),
-                0 0 ${25 + y * 10}px rgba(0, 255, 255, 0.4)
-            `;
-        });
-
-        // Add ripple effect on bubble click
-        const linkBubble = document.getElementById('linkBubble');
-        linkBubble.addEventListener('click', function(e) {
-            
-            // Add ripple animation
-            this.classList.add('clicked');
-            setTimeout(() => {
-                this.classList.remove('clicked');
-            }, 600);
-        });
-
-        // Add secret mission activation effect
-        const secretBubble = document.getElementById('secretBubble');
-        secretBubble.addEventListener('click', function(e) {
-            
-            // Add activation animation
-            this.classList.add('activated');
-            setTimeout(() => {
-                this.classList.remove('activated');
-            }, 1000);
-        });
-
-        // Add TGRGreen bubble click effect
-        const tgrgreenBubble = document.getElementById('tgrgreenBubble');
-        tgrgreenBubble.addEventListener('click', function(e) {
-            // Don't prevent default - let the link work
-            // Add ripple animation
-            this.classList.add('clicked');
-            setTimeout(() => {
-                this.classList.remove('clicked');
-            }, 800);
-        });
     </script>
 </body>
 </html>

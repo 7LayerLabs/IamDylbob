@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Plant Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        input {
+            padding: 10px;
+            width: 300px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #87a96b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #6b8a56;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+        .plant-card {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .info {
+            color: blue;
+            font-style: italic;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plant Search Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test Local Database</h2>
+        <button onclick="testLocalDatabase()">Test Local Database</button>
+        <div id="localTestResults" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Search Plants</h2>
+        <input type="text" id="searchInput" placeholder="Enter plant name (e.g., Pothos, Snake Plant)">
+        <button onclick="testSearch()">Search</button>
+        <div id="searchResults" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>API Status</h2>
+        <button onclick="checkAPIStatus()">Check API Status</button>
+        <div id="apiStatus" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Console Output</h2>
+        <div id="consoleOutput" class="results">
+            <pre id="logOutput">Console messages will appear here...</pre>
+        </div>
+    </div>
+
+    <!-- Load the plant database and API -->
+    <script src="local-plant-database.js"></script>
+    <script src="plant-api.js"></script>
+    
+    <script>
+        // Override console.log to display in page
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logOutput = document.getElementById('logOutput');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logOutput.innerHTML += '\n[LOG] ' + args.join(' ');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            logOutput.innerHTML += '\n[ERROR] ' + args.join(' ');
+        };
+
+        // Test local database
+        function testLocalDatabase() {
+            const results = document.getElementById('localTestResults');
+            results.innerHTML = '<p class="info">Testing local database...</p>';
+            
+            try {
+                // Check if database is loaded
+                if (window.localPlantDatabase) {
+                    results.innerHTML = '<p class="success">✓ Local database loaded successfully!</p>';
+                    
+                    // Test search function
+                    const testResults = window.localPlantDatabase.searchPlants('pothos');
+                    results.innerHTML += `<p>Search for "pothos": Found ${testResults.length} result(s)</p>`;
+                    
+                    if (testResults.length > 0) {
+                        results.innerHTML += '<div class="plant-card">';
+                        results.innerHTML += `<strong>${testResults[0].common_name}</strong><br>`;
+                        results.innerHTML += `Scientific: ${testResults[0].scientific_name}<br>`;
+                        results.innerHTML += `Watering: Every ${testResults[0].watering_days} days`;
+                        results.innerHTML += '</div>';
+                    }
+                    
+                    // Show total plants
+                    results.innerHTML += `<p class="success">Total plants in database: ${window.localPlantDatabase.plants.length}</p>`;
+                } else {
+                    results.innerHTML = '<p class="error">✗ Local database not loaded!</p>';
+                }
+            } catch (error) {
+                results.innerHTML = `<p class="error">✗ Error: ${error.message}</p>`;
+            }
+        }
+
+        // Test plant search
+        async function testSearch() {
+            const searchTerm = document.getElementById('searchInput').value;
+            const results = document.getElementById('searchResults');
+            
+            if (!searchTerm) {
+                results.innerHTML = '<p class="error">Please enter a plant name</p>';
+                return;
+            }
+            
+            results.innerHTML = '<p class="info">Searching...</p>';
+            
+            try {
+                console.log(`Searching for: ${searchTerm}`);
+                const searchResults = await window.plantAPI.searchPlants(searchTerm);
+                
+                if (searchResults && searchResults.length > 0) {
+                    results.innerHTML = `<p class="success">✓ Found ${searchResults.length} result(s)</p>`;
+                    
+                    searchResults.forEach(plant => {
+                        const card = document.createElement('div');
+                        card.className = 'plant-card';
+                        card.innerHTML = `
+                            <strong>${plant.common_name}</strong><br>
+                            Scientific: ${plant.scientific_name}<br>
+                            Source: ${plant.source}<br>
+                            ID: ${plant.id}
+                        `;
+                        results.appendChild(card);
+                    });
+                } else {
+                    results.innerHTML = '<p class="error">✗ No plants found</p>';
+                }
+            } catch (error) {
+                results.innerHTML = `<p class="error">✗ Search error: ${error.message}</p>`;
+                console.error('Search error:', error);
+            }
+        }
+
+        // Check API status
+        async function checkAPIStatus() {
+            const status = document.getElementById('apiStatus');
+            status.innerHTML = '<p class="info">Checking API status...</p>';
+            
+            // Test Perenual API
+            try {
+                const perenualTest = await fetch('https://perenual.com/api/species-list?key=sk-wVqv6896adbe8276911757&q=test');
+                if (perenualTest.ok) {
+                    status.innerHTML += '<p class="success">✓ Perenual API: Connected</p>';
+                } else {
+                    status.innerHTML += `<p class="error">✗ Perenual API: Error ${perenualTest.status}</p>`;
+                }
+            } catch (error) {
+                status.innerHTML += '<p class="error">✗ Perenual API: Connection failed</p>';
+            }
+            
+            // Test Trefle API
+            try {
+                const trefleTest = await fetch('https://trefle.io/api/v1/plants/search?token=UNjljjfkmiIhT5QgTjAUyjQm5pl0aC51fCF93l6J4yI&q=test');
+                if (trefleTest.ok) {
+                    status.innerHTML += '<p class="success">✓ Trefle API: Connected</p>';
+                } else {
+                    status.innerHTML += `<p class="error">✗ Trefle API: Error ${trefleTest.status}</p>`;
+                }
+            } catch (error) {
+                status.innerHTML += '<p class="error">✗ Trefle API: Connection failed</p>';
+            }
+            
+            // Check local fallback
+            if (window.localPlantDatabase) {
+                status.innerHTML += '<p class="success">✓ Local Database: Available as fallback</p>';
+            }
+        }
+
+        // Run initial test on load
+        window.onload = function() {
+            console.log('Test page loaded');
+            testLocalDatabase();
+        };
+    </script>
+</body>
+</html>

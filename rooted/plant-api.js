@@ -56,6 +56,19 @@ class PlantAPIService {
         // Combine and deduplicate results
         results.combined = this.combineSearchResults(results.perenual, results.trefle);
         
+        // FALLBACK: If no API results, use local database
+        if (results.combined.length === 0 && window.localPlantDatabase) {
+            console.log('APIs failed, using local database');
+            const localResults = window.localPlantDatabase.searchPlants(query);
+            results.combined = localResults.map(plant => ({
+                id: plant.id,
+                common_name: plant.common_name,
+                scientific_name: plant.scientific_name,
+                image: null, // Local database doesn't have images
+                source: 'local'
+            }));
+        }
+        
         // Cache the results
         this.setCache(cacheKey, results.combined);
         
@@ -72,6 +85,22 @@ class PlantAPIService {
         }
 
         let details = null;
+
+        // Handle local database source
+        if (source === 'local' && window.localPlantDatabase) {
+            const localPlant = window.localPlantDatabase.getPlantDetails(plantId);
+            if (localPlant) {
+                details = {
+                    ...localPlant,
+                    watering_period: `Every ${localPlant.watering_days} days`,
+                    source: 'local'
+                };
+            }
+            if (details) {
+                this.setCache(cacheKey, details);
+            }
+            return details;
+        }
 
         if (source === 'perenual') {
             try {

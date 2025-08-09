@@ -47,20 +47,62 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with Plant Search -->
     <section id="home" class="hero">
         <div class="hero-content">
             <img src="images/logo.png" alt="Rooted With Eva" class="hero-logo">
-            <p class="hero-subtitle">Your indoor plant paradise in New Hampshire</p>
-            <div class="hero-buttons">
-                <button class="btn-primary" onclick="scrollToSection('tips')">Get Growing Tips</button>
-                <button class="btn-secondary" onclick="scrollToSection('tracker')">Track Your Plants</button>
+            <h1 class="hero-title">Discover Your Perfect Plant</h1>
+            <p class="hero-subtitle">Search 10,000+ plants for personalized care guides</p>
+            
+            <!-- Main Plant Search -->
+            <div class="hero-search-container">
+                <div class="hero-search-box">
+                    <input type="text" id="heroPlantSearch" placeholder="Search any plant... Try 'Monstera' or 'Snake Plant'">
+                    <button class="btn-hero-search" onclick="heroSearchPlant()">
+                        <span>🔍 Search</span>
+                    </button>
+                </div>
+                <div class="search-suggestions">
+                    <span class="suggestion-label">Popular:</span>
+                    <button onclick="quickSearch('Pothos')">Pothos</button>
+                    <button onclick="quickSearch('Monstera')">Monstera</button>
+                    <button onclick="quickSearch('Snake Plant')">Snake Plant</button>
+                    <button onclick="quickSearch('Peace Lily')">Peace Lily</button>
+                    <button onclick="quickSearch('Fiddle Leaf Fig')">Fiddle Leaf Fig</button>
+                </div>
+            </div>
+            
+            <div id="heroSearchResults" class="hero-search-results"></div>
+            
+            <div class="hero-features">
+                <div class="feature-pill">
+                    <span class="feature-icon">🌱</span>
+                    <span>10,000+ Plants</span>
+                </div>
+                <div class="feature-pill">
+                    <span class="feature-icon">💧</span>
+                    <span>Custom Care Guides</span>
+                </div>
+                <div class="feature-pill">
+                    <span class="feature-icon">📱</span>
+                    <span>Track & Sync Anywhere</span>
+                </div>
             </div>
         </div>
         <div class="floating-leaves">
             <span class="leaf">🍃</span>
             <span class="leaf">🌿</span>
             <span class="leaf">🍀</span>
+        </div>
+    </section>
+    
+    <!-- Featured Plants Section -->
+    <section class="featured-plants">
+        <div class="container">
+            <h2 class="section-title">🌟 Trending Plants This Week</h2>
+            <div id="featuredPlantsGrid" class="featured-plants-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
         </div>
     </section>
 
@@ -107,12 +149,24 @@
     <section id="tracker" class="section tracker-section">
         <div class="container">
             <h2 class="section-title">Plant Water Tracker</h2>
+            
+            <!-- Plant Search Section -->
+            <div class="plant-search-container">
+                <h3>🔍 Search Plant Database</h3>
+                <div class="search-box">
+                    <input type="text" id="plantSearch" placeholder="Search for any plant (e.g., Monstera, Snake Plant)">
+                    <button class="btn-search" onclick="searchPlantDatabase()">Search</button>
+                </div>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+            
             <div class="tracker-container">
                 <div class="add-plant">
                     <h3>Add Your Plant</h3>
                     <input type="text" id="plantName" placeholder="Plant name (e.g., Pothos)">
                     <input type="number" id="wateringDays" placeholder="Days between watering" min="1" max="30">
                     <button class="btn-primary" onclick="addPlant()">Add Plant</button>
+                    <div id="suggestedCare" class="suggested-care"></div>
                 </div>
                 <div class="plants-list" id="plantsList">
                     <!-- Plants will be added here dynamically -->
@@ -273,6 +327,19 @@
         </div>
     </footer>
 
+    <script src="plant-api.js"></script>
     <script src="script.js"></script>
+    <script type="module">
+        import { createAuthUI } from './auth-ui.js';
+        import * as authModule from './auth-ui.js';
+        
+        // Make auth module globally accessible
+        window.authModule = authModule;
+        
+        // Initialize auth UI when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            createAuthUI();
+        });
+    </script>
 </body>
 </html>

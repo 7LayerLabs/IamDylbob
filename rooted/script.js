@@ -18,8 +18,9 @@ function scrollToSection(sectionId) {
 
 // Plant Water Tracker
 let plants = JSON.parse(localStorage.getItem('plants')) || [];
+window.plants = plants; // Make accessible globally for auth module
 
-function addPlant() {
+async function addPlant() {
     const nameInput = document.getElementById('plantName');
     const daysInput = document.getElementById('wateringDays');
     
@@ -41,11 +42,17 @@ function addPlant() {
     renderPlants();
     updateCalendar();
     
+    // Sync to cloud if signed in
+    if (window.authModule && window.authModule.isSignedIn()) {
+        await window.authModule.saveToCloud(plant);
+    }
+    
     nameInput.value = '';
     daysInput.value = '';
     
     showNotification(`${plant.name} added to your plant collection! 🌱`);
 }
+window.addPlant = addPlant; // Make accessible globally
 
 function calculateNextWatering(lastDate, interval) {
     const next = new Date(lastDate);
@@ -53,7 +60,7 @@ function calculateNextWatering(lastDate, interval) {
     return next.toISOString();
 }
 
-function waterPlant(plantId) {
+async function waterPlant(plantId) {
     const plant = plants.find(p => p.id === plantId);
     if (plant) {
         plant.lastWatered = new Date().toISOString();
@@ -61,16 +68,29 @@ function waterPlant(plantId) {
         savePlants();
         renderPlants();
         updateCalendar();
+        
+        // Sync to cloud if signed in
+        if (window.authModule && window.authModule.isSignedIn()) {
+            await window.authModule.saveToCloud(plant);
+        }
+        
         showNotification(`${plant.name} has been watered! 💧`);
     }
 }
+window.waterPlant = waterPlant; // Make accessible globally
 
-function deletePlant(plantId) {
+async function deletePlant(plantId) {
     plants = plants.filter(p => p.id !== plantId);
     savePlants();
     renderPlants();
     updateCalendar();
+    
+    // Delete from cloud if signed in
+    if (window.authModule && window.authModule.isSignedIn()) {
+        await window.authModule.deleteFromCloud(plantId);
+    }
 }
+window.deletePlant = deletePlant; // Make accessible globally
 
 function savePlants() {
     localStorage.setItem('plants', JSON.stringify(plants));
@@ -79,6 +99,7 @@ function savePlants() {
 function renderPlants() {
     const plantsList = document.getElementById('plantsList');
     if (!plantsList) return;
+    window.renderPlants = renderPlants; // Make accessible globally
     
     if (plants.length === 0) {
         plantsList.innerHTML = '<p style="text-align: center; color: #87a96b;">No plants added yet. Add your first plant above!</p>';
@@ -119,6 +140,7 @@ function renderPlants() {
 function updateCalendar() {
     const calendarContent = document.getElementById('calendarContent');
     if (!calendarContent) return;
+    window.updateCalendar = updateCalendar; // Make accessible globally
     
     if (plants.length === 0) {
         calendarContent.innerHTML = '<p>Add plants to see your watering schedule!</p>';
@@ -363,11 +385,310 @@ function checkWateringReminders() {
     });
 }
 
+// Plant Database Search Functions
+async function searchPlantDatabase() {
+    const searchInput = document.getElementById('plantSearch');
+    const searchResults = document.getElementById('searchResults');
+    
+    if (!searchInput.value.trim()) {
+        searchResults.innerHTML = '<p style="color: #cc0000;">Please enter a plant name to search</p>';
+        return;
+    }
+    
+    searchResults.innerHTML = '<p style="color: #87a96b;">Searching plant database...</p>';
+    
+    try {
+        const results = await window.plantAPI.searchPlants(searchInput.value);
+        
+        if (!results || results.length === 0) {
+            searchResults.innerHTML = '<p style="color: #cc0000;">No plants found. Try a different name.</p>';
+            return;
+        }
+        
+        // Display search results
+        searchResults.innerHTML = `
+            <div class="search-results-grid">
+                ${results.slice(0, 6).map(plant => `
+                    <div class="plant-result-card" onclick="selectPlantFromSearch('${plant.common_name}', ${plant.id}, '${plant.source}')">
+                        ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="plant-thumb">` : '<div class="plant-thumb-placeholder">🌿</div>'}
+                        <h4>${plant.common_name}</h4>
+                        <p class="scientific-name">${Array.isArray(plant.scientific_name) ? plant.scientific_name[0] : plant.scientific_name || ''}</p>
+                        <button class="btn-select">View Care Info</button>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } catch (error) {
+        console.error('Search error:', error);
+        searchResults.innerHTML = '<p style="color: #cc0000;">Error searching database. Please try again.</p>';
+    }
+}
+
+async function selectPlantFromSearch(plantName, plantId, source) {
+    const suggestedCare = document.getElementById('suggestedCare');
+    const plantNameInput = document.getElementById('plantName');
+    const wateringDaysInput = document.getElementById('wateringDays');
+    
+    // Set the plant name
+    plantNameInput.value = plantName;
+    
+    // Show loading message
+    suggestedCare.innerHTML = '<p style="color: #87a96b;">Loading care information...</p>';
+    suggestedCare.style.display = 'block';
+    
+    try {
+        // Get detailed plant information
+        const details = await window.plantAPI.getPlantDetails(plantId, source);
+        
+        if (details) {
+            // Set watering frequency based on API data
+            let wateringDays = 7; // default
+            if (details.watering === 'Frequent') wateringDays = 3;
+            else if (details.watering === 'Moderate') wateringDays = 7;
+            else if (details.watering === 'Low') wateringDays = 10;
+            else if (details.watering === 'Minimal') wateringDays = 14;
+            
+            wateringDaysInput.value = wateringDays;
+            
+            // Display care information
+            suggestedCare.innerHTML = `
+                <div class="care-info-card">
+                    <h4>Care Guide for ${plantName}</h4>
+                    ${details.image ? `<img src="${details.image}" alt="${plantName}" class="care-plant-image">` : ''}
+                    <div class="care-details">
+                        <p><strong>💧 Watering:</strong> ${details.watering || 'Moderate'} ${details.watering_period ? `(${details.watering_period})` : ''}</p>
+                        <p><strong>☀️ Sunlight:</strong> ${Array.isArray(details.sunlight) ? details.sunlight.join(', ') : details.sunlight || 'Partial sun'}</p>
+                        ${details.care_level ? `<p><strong>📊 Care Level:</strong> ${details.care_level}</p>` : ''}
+                        ${details.indoor !== undefined ? `<p><strong>🏠 Indoor Plant:</strong> ${details.indoor ? 'Yes' : 'No'}</p>` : ''}
+                        ${details.poisonous_to_pets ? `<p><strong>⚠️ Pet Safe:</strong> No - Toxic to pets</p>` : ''}
+                        ${details.description ? `<p><strong>About:</strong> ${details.description.substring(0, 200)}...</p>` : ''}
+                        ${details.maintenance ? `<p><strong>Maintenance:</strong> ${details.maintenance}</p>` : ''}
+                        ${details.humidity ? `<p><strong>💦 Humidity:</strong> ${details.humidity}%</p>` : ''}
+                        ${details.temperature_min ? `<p><strong>🌡️ Min Temp:</strong> ${details.temperature_min}°C</p>` : ''}
+                    </div>
+                    <button class="btn-secondary" onclick="hideCareInfo()">Close</button>
+                </div>
+            `;
+            
+            // Store the care info for later use
+            window.lastPlantCareInfo = details;
+        }
+    } catch (error) {
+        console.error('Error getting plant details:', error);
+        suggestedCare.innerHTML = '<p style="color: #cc0000;">Could not load care information</p>';
+    }
+}
+
+function hideCareInfo() {
+    const suggestedCare = document.getElementById('suggestedCare');
+    suggestedCare.style.display = 'none';
+    suggestedCare.innerHTML = '';
+}
+
+// Auto-suggest care when typing plant name
+let searchTimeout;
+document.addEventListener('DOMContentLoaded', () => {
+    const plantNameInput = document.getElementById('plantName');
+    if (plantNameInput) {
+        plantNameInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const value = e.target.value.trim();
+            
+            if (value.length > 2) {
+                searchTimeout = setTimeout(async () => {
+                    const suggestedCare = document.getElementById('suggestedCare');
+                    suggestedCare.innerHTML = '<p style="color: #87a96b; font-size: 12px;">Searching for care tips...</p>';
+                    suggestedCare.style.display = 'block';
+                    
+                    try {
+                        const careGuide = await window.plantAPI.getPlantCareGuide(value);
+                        if (careGuide) {
+                            // Auto-fill watering days
+                            const wateringDaysInput = document.getElementById('wateringDays');
+                            let wateringDays = 7;
+                            if (careGuide.watering === 'Frequent') wateringDays = 3;
+                            else if (careGuide.watering === 'Moderate') wateringDays = 7;
+                            else if (careGuide.watering === 'Low') wateringDays = 10;
+                            else if (careGuide.watering === 'Minimal') wateringDays = 14;
+                            
+                            if (!wateringDaysInput.value) {
+                                wateringDaysInput.value = wateringDays;
+                            }
+                            
+                            suggestedCare.innerHTML = `
+                                <div class="mini-care-tip">
+                                    <strong>Suggested care for ${careGuide.name}:</strong>
+                                    Water every ${wateringDays} days, ${careGuide.sunlight.join(', ')}
+                                </div>
+                            `;
+                        } else {
+                            suggestedCare.style.display = 'none';
+                        }
+                    } catch (error) {
+                        suggestedCare.style.display = 'none';
+                    }
+                }, 1000);
+            }
+        });
+    }
+});
+
+// Hero Search Functions
+async function heroSearchPlant() {
+    const searchInput = document.getElementById('heroPlantSearch');
+    const searchResults = document.getElementById('heroSearchResults');
+    
+    if (!searchInput.value.trim()) {
+        searchResults.innerHTML = '';
+        return;
+    }
+    
+    searchResults.innerHTML = '<p style="color: white; text-align: center;">🔍 Searching plant database...</p>';
+    
+    try {
+        const results = await window.plantAPI.searchPlants(searchInput.value);
+        
+        if (!results || results.length === 0) {
+            searchResults.innerHTML = '<p style="color: white; text-align: center;">No plants found. Try a different name.</p>';
+            return;
+        }
+        
+        // Display search results
+        searchResults.innerHTML = `
+            <div class="search-results-grid">
+                <h3 style="grid-column: 1/-1; text-align: center; color: #2d5016; margin-bottom: 20px;">
+                    Found ${results.length} plants matching "${searchInput.value}"
+                </h3>
+                ${results.slice(0, 6).map(plant => `
+                    <div class="plant-result-card" onclick="viewPlantDetails('${plant.common_name.replace(/'/g, "\\'")}', ${plant.id}, '${plant.source}')">
+                        ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="plant-thumb">` : '<div class="plant-thumb-placeholder">🌿</div>'}
+                        <h4>${plant.common_name}</h4>
+                        <p class="scientific-name">${Array.isArray(plant.scientific_name) ? plant.scientific_name[0] : plant.scientific_name || ''}</p>
+                        <button class="btn-select">View Details</button>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        // Smooth scroll to results
+        searchResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (error) {
+        console.error('Search error:', error);
+        searchResults.innerHTML = '<p style="color: white; text-align: center;">Error searching database. Please try again.</p>';
+    }
+}
+
+// Quick search from suggestions
+function quickSearch(plantName) {
+    const searchInput = document.getElementById('heroPlantSearch');
+    searchInput.value = plantName;
+    heroSearchPlant();
+}
+
+// View detailed plant information
+async function viewPlantDetails(plantName, plantId, source) {
+    const modal = document.createElement('div');
+    modal.className = 'plant-modal';
+    modal.innerHTML = '<div class="modal-content"><p>Loading plant details...</p></div>';
+    document.body.appendChild(modal);
+    
+    try {
+        const details = await window.plantAPI.getPlantDetails(plantId, source);
+        
+        if (details) {
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="this.closest('.plant-modal').remove()">×</button>
+                    <h2>${plantName}</h2>
+                    ${details.image ? `<img src="${details.image}" alt="${plantName}" class="modal-plant-image">` : ''}
+                    <div class="modal-details">
+                        <h3>Care Information</h3>
+                        <p><strong>💧 Watering:</strong> ${details.watering || 'Moderate'}</p>
+                        <p><strong>☀️ Sunlight:</strong> ${Array.isArray(details.sunlight) ? details.sunlight.join(', ') : details.sunlight || 'Partial sun'}</p>
+                        ${details.care_level ? `<p><strong>📊 Care Level:</strong> ${details.care_level}</p>` : ''}
+                        ${details.indoor !== undefined ? `<p><strong>🏠 Indoor Plant:</strong> ${details.indoor ? 'Yes' : 'No'}</p>` : ''}
+                        ${details.poisonous_to_pets ? `<p><strong>⚠️ Pet Safe:</strong> No - Toxic to pets</p>` : ''}
+                        ${details.description ? `<p><strong>About:</strong> ${details.description}</p>` : ''}
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-primary" onclick="addToTracker('${plantName.replace(/'/g, "\\'")}', ${details.watering === 'Frequent' ? 3 : details.watering === 'Low' ? 10 : details.watering === 'Minimal' ? 14 : 7})">
+                            Add to My Tracker
+                        </button>
+                        <button class="btn-secondary" onclick="this.closest('.plant-modal').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error getting plant details:', error);
+        modal.innerHTML = `
+            <div class="modal-content">
+                <button class="modal-close" onclick="this.closest('.plant-modal').remove()">×</button>
+                <p>Could not load plant details</p>
+            </div>
+        `;
+    }
+}
+
+// Add plant to tracker from modal
+function addToTracker(plantName, wateringDays) {
+    document.getElementById('plantName').value = plantName;
+    document.getElementById('wateringDays').value = wateringDays;
+    document.querySelector('.plant-modal')?.remove();
+    scrollToSection('tracker');
+    showNotification(`${plantName} ready to add! Click "Add Plant" to save.`);
+}
+
+// Load featured plants on homepage
+async function loadFeaturedPlants() {
+    const featuredGrid = document.getElementById('featuredPlantsGrid');
+    if (!featuredGrid) return;
+    
+    const featuredPlants = [
+        'Monstera Deliciosa',
+        'Snake Plant',
+        'Pothos',
+        'Peace Lily',
+        'Rubber Plant',
+        'ZZ Plant'
+    ];
+    
+    featuredGrid.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">Loading featured plants...</p>';
+    
+    const plantCards = [];
+    for (const plantName of featuredPlants) {
+        try {
+            const results = await window.plantAPI.searchPlants(plantName);
+            if (results && results[0]) {
+                const plant = results[0];
+                plantCards.push(`
+                    <div class="featured-plant-card" onclick="viewPlantDetails('${plant.common_name.replace(/'/g, "\\'")}', ${plant.id}, '${plant.source}')">
+                        ${plant.image ? `<img src="${plant.image}" alt="${plant.common_name}" class="featured-plant-image">` : '<div class="featured-plant-image" style="background: linear-gradient(135deg, #a8d5a8 0%, #87a96b 100%); display: flex; align-items: center; justify-content: center; font-size: 60px;">🌿</div>'}
+                        <div class="featured-plant-info">
+                            <div class="featured-plant-name">${plant.common_name}</div>
+                            <div class="featured-plant-details">Click to view care guide</div>
+                        </div>
+                    </div>
+                `);
+            }
+        } catch (error) {
+            console.error(`Error loading ${plantName}:`, error);
+        }
+    }
+    
+    if (plantCards.length > 0) {
+        featuredGrid.innerHTML = plantCards.join('');
+    } else {
+        featuredGrid.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">Featured plants coming soon!</p>';
+    }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     renderPlants();
     updateCalendar();
     checkWateringReminders();
+    loadFeaturedPlants();
     
     // Set up smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

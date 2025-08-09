@@ -646,7 +646,7 @@
         // Add TGRGreen bubble click effect
         const tgrgreenBubble = document.getElementById('tgrgreenBubble');
         tgrgreenBubble.addEventListener('click', function(e) {
-            
+            // Don't prevent default - let the link work
             // Add ripple animation
             this.classList.add('clicked');
             setTimeout(() => {

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooted With Eva - Indoor Plant Care for New England</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Decorations -->
+    <div class="background-plants">
+        <div class="bg-leaf leaf-1">🌿</div>
+        <div class="bg-leaf leaf-2">🍃</div>
+        <div class="bg-leaf leaf-3">🌱</div>
+        <div class="bg-leaf leaf-4">🍀</div>
+        <div class="bg-leaf leaf-5">🌾</div>
+        <div class="bg-leaf leaf-6">🌿</div>
+        <div class="bg-leaf leaf-7">🍃</div>
+        <div class="bg-leaf leaf-8">🌺</div>
+        <div class="bg-leaf leaf-9">🌸</div>
+        <div class="bg-leaf leaf-10">🌼</div>
+        <div class="bg-vine vine-left"></div>
+        <div class="bg-vine vine-right"></div>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Rooted With Eva" class="logo-img">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#tips">Plant Tips</a></li>
+                <li><a href="#tracker">Water Tracker</a></li>
+                <li><a href="#new-england">NH Growing</a></li>
+                <li><a href="#fun-facts">Fun & Facts</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <img src="images/logo.png" alt="Rooted With Eva" class="hero-logo">
+            <p class="hero-subtitle">Your indoor plant paradise in New Hampshire</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="scrollToSection('tips')">Get Growing Tips</button>
+                <button class="btn-secondary" onclick="scrollToSection('tracker')">Track Your Plants</button>
+            </div>
+        </div>
+        <div class="floating-leaves">
+            <span class="leaf">🍃</span>
+            <span class="leaf">🌿</span>
+            <span class="leaf">🍀</span>
+        </div>
+    </section>
+
+    <!-- Plant Tips Section -->
+    <section id="tips" class="section tips-section">
+        <div class="container">
+            <h2 class="section-title">Indoor Plant Care Tips</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">💧</div>
+                    <h3>Watering Wisdom</h3>
+                    <p>Check soil moisture with your finger. Most houseplants prefer slightly dry soil between waterings. In NH winters, reduce watering frequency as plants grow slower.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">☀️</div>
+                    <h3>Light Requirements</h3>
+                    <p>NH winters are dark! Move plants closer to south-facing windows or consider grow lights. Rotate plants weekly for even growth.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🌡️</div>
+                    <h3>Humidity Hacks</h3>
+                    <p>NH indoor air gets dry in winter. Group plants together, use pebble trays with water, or run a humidifier to keep tropical plants happy.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🌱</div>
+                    <h3>Fertilizing Schedule</h3>
+                    <p>Feed monthly in spring/summer, reduce to every 6-8 weeks in fall/winter. Use half-strength liquid fertilizer for most houseplants.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">✂️</div>
+                    <h3>Pruning & Propagation</h3>
+                    <p>Spring is perfect for pruning in NH! Save healthy cuttings to propagate in water. Share with friends or expand your collection!</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🐛</div>
+                    <h3>Pest Prevention</h3>
+                    <p>Check new plants for 2 weeks before introducing to your collection. Wipe leaves monthly with neem oil solution to prevent pests.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Water Tracker Section -->
+    <section id="tracker" class="section tracker-section">
+        <div class="container">
+            <h2 class="section-title">Plant Water Tracker</h2>
+            <div class="tracker-container">
+                <div class="add-plant">
+                    <h3>Add Your Plant</h3>
+                    <input type="text" id="plantName" placeholder="Plant name (e.g., Pothos)">
+                    <input type="number" id="wateringDays" placeholder="Days between watering" min="1" max="30">
+                    <button class="btn-primary" onclick="addPlant()">Add Plant</button>
+                </div>
+                <div class="plants-list" id="plantsList">
+                    <!-- Plants will be added here dynamically -->
+                </div>
+            </div>
+            <div class="watering-calendar" id="wateringCalendar">
+                <h3>Upcoming Watering Schedule</h3>
+                <div id="calendarContent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New England Growing Section -->
+    <section id="new-england" class="section ne-section">
+        <div class="container">
+            <h2 class="section-title">New Hampshire Indoor Growing Guide</h2>
+            <div class="seasons-grid">
+                <div class="season-card winter">
+                    <h3>❄️ Winter (Dec-Feb)</h3>
+                    <ul>
+                        <li>Move plants away from cold windows at night</li>
+                        <li>Reduce watering - growth slows significantly</li>
+                        <li>Watch for dry air damage - mist regularly</li>
+                        <li>Best time for forcing bulbs indoors</li>
+                        <li>Keep plants away from heating vents</li>
+                    </ul>
+                </div>
+                <div class="season-card spring">
+                    <h3>🌸 Spring (Mar-May)</h3>
+                    <ul>
+                        <li>Time to repot root-bound plants</li>
+                        <li>Increase watering as growth resumes</li>
+                        <li>Start fertilizing again</li>
+                        <li>Perfect for taking cuttings</li>
+                        <li>Watch for late frost if moving plants outside</li>
+                    </ul>
+                </div>
+                <div class="season-card summer">
+                    <h3>☀️ Summer (Jun-Aug)</h3>
+                    <ul>
+                        <li>Some plants enjoy a "summer vacation" outdoors</li>
+                        <li>Increase watering frequency</li>
+                        <li>Watch for sunburn on leaves</li>
+                        <li>Great time to propagate succulents</li>
+                        <li>AC can dry air - monitor humidity</li>
+                    </ul>
+                </div>
+                <div class="season-card fall">
+                    <h3>🍂 Fall (Sep-Nov)</h3>
+                    <ul>
+                        <li>Bring outdoor plants in before first frost</li>
+                        <li>Check for hitchhiking pests</li>
+                        <li>Gradually reduce watering</li>
+                        <li>Last chance for major pruning</li>
+                        <li>Prepare grow lights for darker months</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nh-tips">
+                <h3>Special NH Considerations</h3>
+                <div class="tip-box">
+                    <p><strong>🏠 Old NH Homes:</strong> Drafty windows and uneven heating are common. Use draft stoppers and monitor temperature swings near windows.</p>
+                    <p><strong>🌡️ Temperature Swings:</strong> NH can have 40°F temperature differences in a day! Keep plants away from doors that open frequently.</p>
+                    <p><strong>💡 Short Winter Days:</strong> Consider full-spectrum LED grow lights for light-loving plants from November through February.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fun Facts & Jokes Section -->
+    <section id="fun-facts" class="section fun-section">
+        <div class="container">
+            <h2 class="section-title">Plant Fun Zone</h2>
+            <div class="fun-grid">
+                <div class="fun-card">
+                    <h3>🌺 Daily Plant Joke</h3>
+                    <p id="plantJoke" class="joke-text">Why did the gardener plant light bulbs? He wanted to grow a power plant!</p>
+                    <button class="btn-fun" onclick="getNewJoke()">New Joke!</button>
+                </div>
+                <div class="fun-card">
+                    <h3>🧠 Did You Know?</h3>
+                    <p id="plantFact" class="fact-text">The oldest known potted plant is over 200 years old! It's a Eastern Cape cycad at Kew Gardens in London.</p>
+                    <button class="btn-fun" onclick="getNewFact()">New Fact!</button>
+                </div>
+            </div>
+            <div class="plant-quiz">
+                <h3>🎯 Quick Plant Quiz</h3>
+                <div id="quizContainer">
+                    <p class="quiz-question">What's the best way to check if your plant needs water?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-btn" onclick="checkAnswer(this, true)">Stick your finger in the soil</button>
+                        <button class="quiz-btn" onclick="checkAnswer(this, false)">Water on a strict schedule</button>
+                        <button class="quiz-btn" onclick="checkAnswer(this, false)">Wait until leaves droop</button>
+                    </div>
+                    <p id="quizFeedback"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="section resources-section">
+        <div class="container">
+            <h2 class="section-title">Plant Parent Resources</h2>
+            <div class="resources-grid">
+                <div class="resource-category">
+                    <h3>🏪 NH Plant Shops</h3>
+                    <ul>
+                        <li><a href="https://www.google.com/search?q=plant+shops+nashua+nh" target="_blank">Local Nashua Plant Shops</a></li>
+                        <li><a href="https://www.google.com/search?q=farmers+market+new+hampshire+plants" target="_blank">NH Farmers Markets</a></li>
+                        <li><a href="https://www.google.com/search?q=garden+centers+southern+nh" target="_blank">Southern NH Garden Centers</a></li>
+                    </ul>
+                </div>
+                <div class="resource-category">
+                    <h3>📚 Learning Resources</h3>
+                    <ul>
+                        <li><a href="https://extension.unh.edu/gardens-landscapes" target="_blank">UNH Cooperative Extension</a></li>
+                        <li><a href="https://www.houseplantjournal.com/" target="_blank">House Plant Journal</a></li>
+                        <li><a href="https://www.thespruce.com/houseplants-4127750" target="_blank">The Spruce - Houseplants</a></li>
+                    </ul>
+                </div>
+                <div class="resource-category">
+                    <h3>🛠️ Plant Care Tools</h3>
+                    <ul>
+                        <li><a href="https://www.amazon.com/s?k=moisture+meter+plants" target="_blank">Moisture Meters</a></li>
+                        <li><a href="https://www.amazon.com/s?k=grow+lights+indoor+plants" target="_blank">Grow Lights</a></li>
+                        <li><a href="https://www.amazon.com/s?k=plant+humidifier" target="_blank">Humidifiers</a></li>
+                    </ul>
+                </div>
+                <div class="resource-category">
+                    <h3>🌿 Plant ID & Care Apps</h3>
+                    <ul>
+                        <li><a href="https://www.picturethisai.com/" target="_blank">PictureThis</a></li>
+                        <li><a href="https://www.plantnet.org/" target="_blank">PlantNet</a></li>
+                        <li><a href="https://getplanta.com/" target="_blank">Planta</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="emergency-care">
+                <h3>🚨 Plant Emergency Hotline</h3>
+                <div class="emergency-tips">
+                    <p><strong>Overwatered?</strong> Stop watering, improve drainage, check for root rot</p>
+                    <p><strong>Yellowing leaves?</strong> Could be overwatering, underwatering, or nutrient deficiency</p>
+                    <p><strong>Pests spotted?</strong> Isolate plant immediately, treat with neem oil or insecticidal soap</p>
+                    <p><strong>Drooping?</strong> Check soil moisture, temperature, and recent changes in environment</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>Made with 💚 for New Hampshire plant parents</p>
+                <p>Remember: Every expert was once a beginner. Happy growing!</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

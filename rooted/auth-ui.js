@@ -15,6 +15,10 @@ let unsubscribeSync = null;
 
 // Create auth UI elements
 export function createAuthUI() {
+    // TEMPORARILY DISABLED - Google Sign-in hidden per user request
+    console.log('Auth UI temporarily disabled - using local storage only');
+    return;
+    
     try {
         const authContainer = document.createElement('div');
         authContainer.className = 'auth-container';

@@ -138,8 +138,8 @@ class PlantAPIService {
             }
         }
 
-        // Always try to enrich the data to fill in gaps
-        if (details) {
+        // Only enrich if we have sparse data
+        if (details && (!details.description || Object.keys(details).length < 20)) {
             console.log('Details before enrichment:', Object.keys(details).length, 'fields');
             details = this.enrichPlantData(details);
             console.log('Details after enrichment:', Object.keys(details).length, 'fields');
@@ -376,7 +376,10 @@ class PlantAPIService {
 
     // Format Perenual API response with ALL available data
     formatPerenualDetails(data) {
-        return {
+        if (!data) return null;
+        
+        try {
+            return {
             id: data.id,
             common_name: data.common_name,
             scientific_name: data.scientific_name || [],
@@ -471,11 +474,31 @@ class PlantAPIService {
             },
             source: 'perenual'
         };
+        } catch (error) {
+            console.error('Error formatting Perenual data:', error);
+            // Return basic data if formatting fails
+            return {
+                id: data.id,
+                common_name: data.common_name,
+                scientific_name: data.scientific_name || [],
+                watering: data.watering,
+                sunlight: data.sunlight || [],
+                care_level: data.care_level,
+                description: data.description,
+                indoor: data.indoor,
+                poisonous_to_pets: data.poisonous_to_pets,
+                image: data.default_image?.original_url || data.default_image?.medium_url,
+                source: 'perenual'
+            };
+        }
     }
 
     // Format Trefle API response with ALL available data
     formatTrefleDetails(data) {
-        return {
+        if (!data) return null;
+        
+        try {
+            return {
             id: data.id,
             common_name: data.common_name,
             scientific_name: data.scientific_name,
@@ -579,6 +602,18 @@ class PlantAPIService {
             
             source: 'trefle'
         };
+        } catch (error) {
+            console.error('Error formatting Trefle data:', error);
+            // Return basic data if formatting fails
+            return {
+                id: data.id,
+                common_name: data.common_name,
+                scientific_name: data.scientific_name,
+                family: data.family_common_name,
+                image: data.image_url,
+                source: 'trefle'
+            };
+        }
     }
 
     // Convert Trefle growth data to watering recommendation

@@ -936,6 +936,72 @@ document.addEventListener('DOMContentLoaded', () => {
 setInterval(getNewJoke, 30000); // New joke every 30 seconds
 setInterval(getNewFact, 45000); // New fact every 45 seconds
 
+// Plant Shop Finder by ZIP Code
+function findLocalShops() {
+    const zipInput = document.getElementById('zipInput');
+    const shopResults = document.getElementById('shopResults');
+    const zip = zipInput.value.trim();
+    
+    if (!zip || zip.length !== 5 || isNaN(zip)) {
+        shopResults.innerHTML = '<p style="color: #cc0000;">Please enter a valid 5-digit ZIP code</p>';
+        return;
+    }
+    
+    shopResults.innerHTML = '<p style="color: #87a96b;">Finding plant shops near ' + zip + '...</p>';
+    
+    // Create Google Maps search URLs for different shop types
+    const searches = [
+        { name: 'Plant Nurseries', query: 'plant+nursery+near+' + zip },
+        { name: 'Garden Centers', query: 'garden+center+near+' + zip },
+        { name: 'Home & Garden Stores', query: 'home+garden+store+near+' + zip },
+        { name: 'Florists', query: 'florist+houseplants+near+' + zip }
+    ];
+    
+    // Build the results HTML
+    let resultsHTML = `
+        <div class="local-shops">
+            <h4>🗺️ Local Plant Shops near ${zip}:</h4>
+            <div class="shop-links">
+    `;
+    
+    searches.forEach(search => {
+        resultsHTML += `
+            <div class="shop-search-item">
+                <strong>${search.name}:</strong>
+                <a href="https://www.google.com/maps/search/${search.query}" target="_blank" class="shop-link">
+                    View on Google Maps →
+                </a>
+            </div>
+        `;
+    });
+    
+    // Add specific store locators
+    resultsHTML += `
+            </div>
+            <h4>🏪 Major Store Locators:</h4>
+            <div class="store-locators">
+                <p><a href="https://www.homedepot.com/l/search/${zip}/full/" target="_blank">Find Home Depot →</a></p>
+                <p><a href="https://www.lowes.com/store/${zip}" target="_blank">Find Lowe's →</a></p>
+                <p><a href="https://www.walmart.com/store/finder?location=${zip}&distance=50" target="_blank">Find Walmart Garden Center →</a></p>
+                <p><a href="https://stores.acehardware.com/search.html?q=${zip}" target="_blank">Find Ace Hardware →</a></p>
+            </div>
+            <h4>📦 Online Shops that Deliver to ${zip}:</h4>
+            <div class="online-delivery">
+                <p>✓ <a href="https://www.thesill.com" target="_blank">The Sill</a> - Free shipping over $75</p>
+                <p>✓ <a href="https://bloomscape.com" target="_blank">Bloomscape</a> - Direct from greenhouse</p>
+                <p>✓ <a href="https://www.plantshed.com" target="_blank">PlantShed</a> - Same-day delivery available</p>
+                <p>✓ <a href="https://www.urbanstems.com" target="_blank">UrbanStems</a> - Plants & flowers</p>
+                <p>✓ <a href="https://www.amazon.com/s?k=live+indoor+plants" target="_blank">Amazon</a> - 2-day delivery with Prime</p>
+            </div>
+        </div>
+    `;
+    
+    shopResults.innerHTML = resultsHTML;
+    
+    // Scroll to results
+    shopResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 // Add seasonal background changes based on current month
 const month = new Date().getMonth();
 const heroSection = document.querySelector('.hero');

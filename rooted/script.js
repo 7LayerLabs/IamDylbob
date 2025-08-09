@@ -658,8 +658,10 @@ async function viewPlantDetails(plantName, plantId, source) {
                     <h3>🌱 Essential Care</h3>
                     <p><strong>💧 Watering:</strong> ${details.watering || 'Moderate'} ${details.watering_period ? `(${details.watering_period})` : ''}</p>
                     ${details.watering_general_benchmark?.value ? `<p style="margin-left: 20px; font-size: 14px;">→ About ${details.watering_general_benchmark.value} ${details.watering_general_benchmark.unit || ''} per watering</p>` : ''}
+                    ${details.watering_description ? `<p style="margin-left: 20px; font-size: 14px; color: #555;">${details.watering_description}</p>` : ''}
                     
                     <p><strong>☀️ Sunlight:</strong> ${Array.isArray(details.sunlight) ? details.sunlight.join(', ') : details.sunlight || 'Partial sun'}</p>
+                    ${details.sunlight_description ? `<p style="margin-left: 20px; font-size: 14px; color: #555;">${details.sunlight_description}</p>` : ''}
                     
                     ${details.humidity ? `<p><strong>💦 Humidity:</strong> ${details.humidity}%</p>` : ''}
                     ${details.atmospheric_humidity ? `<p><strong>💦 Humidity:</strong> ${details.atmospheric_humidity}</p>` : ''}

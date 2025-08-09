@@ -75,12 +75,34 @@ class PlantAPIService {
 
         if (source === 'perenual') {
             try {
-                const response = await fetch(
+                // First try the details endpoint
+                let response = await fetch(
                     `${this.perenualBase}/species/details/${plantId}?key=${PERENUAL_API_KEY}`
                 );
+                
                 if (response.ok) {
                     const data = await response.json();
                     details = this.formatPerenualDetails(data);
+                    
+                    // If we got limited data, try the care-guide endpoint for more info
+                    if (!details.description || !details.pruning_tips) {
+                        try {
+                            const careResponse = await fetch(
+                                `${this.perenualBase}/species-care-guide-list?key=${PERENUAL_API_KEY}&species_id=${plantId}`
+                            );
+                            
+                            if (careResponse.ok) {
+                                const careData = await careResponse.json();
+                                if (careData.data && careData.data.length > 0) {
+                                    const care = careData.data[0];
+                                    // Merge care guide data
+                                    details = this.mergeCareGuideData(details, care);
+                                }
+                            }
+                        } catch (careError) {
+                            console.log('Care guide fetch error:', careError);
+                        }
+                    }
                 }
             } catch (error) {
                 console.error('Perenual details error:', error);
@@ -99,10 +121,188 @@ class PlantAPIService {
             }
         }
 
+        // Always try to enrich the data to fill in gaps
+        if (details) {
+            console.log('Details before enrichment:', Object.keys(details).length, 'fields');
+            details = this.enrichPlantData(details);
+            console.log('Details after enrichment:', Object.keys(details).length, 'fields');
+        }
+
         if (details) {
             this.setCache(cacheKey, details);
         }
 
+        return details;
+    }
+
+    // Merge care guide data into plant details
+    mergeCareGuideData(details, careGuide) {
+        if (!careGuide || !careGuide.section) return details;
+        
+        careGuide.section.forEach(section => {
+            switch(section.type) {
+                case 'watering':
+                    if (section.description) {
+                        details.watering_description = section.description;
+                    }
+                    break;
+                case 'sunlight':
+                    if (section.description) {
+                        details.sunlight_description = section.description;
+                    }
+                    break;
+                case 'pruning':
+                    if (section.description) {
+                        details.pruning_tips = section.description;
+                    }
+                    break;
+                case 'soil':
+                    if (section.description) {
+                        details.soil_description = section.description;
+                    }
+                    break;
+                case 'fertilization':
+                    if (section.description) {
+                        details.fertilizer_description = section.description;
+                    }
+                    break;
+                case 'propagation':
+                    if (section.description) {
+                        details.propagation_description = section.description;
+                    }
+                    break;
+                case 'pests':
+                    if (section.description) {
+                        details.pest_description = section.description;
+                    }
+                    break;
+            }
+        });
+        
+        return details;
+    }
+
+    // Enrich sparse plant data with common knowledge
+    enrichPlantData(details) {
+        const name = details.common_name?.toLowerCase() || '';
+        console.log('Enriching plant data for:', name);
+        
+        // Add default descriptions for common plants if missing
+        const plantDefaults = {
+            'agapanthus': {
+                description: 'Agapanthus, commonly known as Lily of the Nile or African Lily, is a striking perennial that produces stunning globe-shaped flower clusters on tall stems. Native to South Africa, these hardy plants are prized for their long-lasting blue, purple, or white blooms.',
+                care_level: 'Easy',
+                maintenance: 'Low',
+                soil: ['Well-draining', 'Sandy loam', 'Clay tolerant'],
+                pruning_tips: 'Remove spent flower heads after blooming. Cut back dead foliage in late winter or early spring.',
+                propagation: ['Division', 'Seeds'],
+                flowering_season: 'Summer',
+                dimensions: { min_value: 2, max_value: 4, unit: 'feet' },
+                flower_color: 'Blue, Purple, or White',
+                drought_tolerant: true,
+                hardiness: { min: '8', max: '11' },
+                pruning_month: ['November', 'December', 'January', 'February'],
+                fertilizer: 'Balanced fertilizer (10-10-10) monthly during growing season',
+                pest_susceptibility: ['Aphids', 'Snails', 'Slugs'],
+                origin: ['South Africa'],
+                growth_rate: 'Moderate'
+            },
+            'lily of the nile': {
+                description: 'Agapanthus, commonly known as Lily of the Nile or African Lily, is a striking perennial that produces stunning globe-shaped flower clusters on tall stems. Native to South Africa, these hardy plants are prized for their long-lasting blue, purple, or white blooms.',
+                care_level: 'Easy',
+                maintenance: 'Low',
+                soil: ['Well-draining', 'Sandy loam', 'Clay tolerant'],
+                pruning_tips: 'Remove spent flower heads after blooming. Cut back dead foliage in late winter or early spring.',
+                propagation: ['Division', 'Seeds'],
+                flowering_season: 'Summer',
+                dimensions: { min_value: 2, max_value: 4, unit: 'feet' },
+                flower_color: 'Blue, Purple, or White',
+                drought_tolerant: true,
+                hardiness: { min: '8', max: '11' },
+                pruning_month: ['November', 'December', 'January', 'February'],
+                fertilizer: 'Balanced fertilizer (10-10-10) monthly during growing season',
+                pest_susceptibility: ['Aphids', 'Snails', 'Slugs'],
+                origin: ['South Africa'],
+                growth_rate: 'Moderate'
+            },
+            'orchid': {
+                description: 'Orchids are exotic flowering plants known for their stunning, long-lasting blooms and elegant appearance. With over 25,000 species, they are one of the largest plant families and are prized as houseplants worldwide.',
+                care_level: 'Moderate',
+                maintenance: 'Moderate',
+                soil: ['Orchid bark mix', 'Well-draining', 'Epiphytic medium'],
+                humidity: 50,
+                pruning_tips: 'Remove spent flower spikes by cutting just above a node. Remove dead or yellowing leaves.',
+                propagation: ['Division', 'Keikis (baby plants)', 'Back bulbs'],
+                indoor: true,
+                flowering_season: 'Varies by species',
+                fertilizer: 'Orchid fertilizer weekly (weakly) during growing season',
+                dimensions: { min_value: 6, max_value: 36, unit: 'inches' }
+            },
+            'snake plant': {
+                description: 'Snake Plant (Sansevieria trifasciata), also known as Mother-in-Law\'s Tongue, is one of the most tolerant houseplants. It features upright, sword-like leaves with distinctive patterns and is famous for purifying air.',
+                care_level: 'Easy',
+                maintenance: 'Low',
+                soil: ['Well-draining', 'Cactus mix', 'Sandy'],
+                drought_tolerant: true,
+                indoor: true,
+                poisonous_to_pets: true,
+                pruning_tips: 'Remove damaged leaves at the base. Divide when overcrowded.',
+                propagation: ['Leaf cuttings', 'Division'],
+                dimensions: { min_value: 1, max_value: 4, unit: 'feet' },
+                growth_rate: 'Slow'
+            },
+            'pothos': {
+                description: 'Pothos (Epipremnum aureum) is a popular trailing vine with heart-shaped leaves. Known as Devil\'s Ivy, it\'s nearly impossible to kill and thrives in various light conditions.',
+                care_level: 'Easy',
+                maintenance: 'Low',
+                soil: ['Well-draining potting mix'],
+                indoor: true,
+                poisonous_to_pets: true,
+                pruning_tips: 'Trim to control length and promote bushiness. Cut just below a node.',
+                propagation: ['Stem cuttings in water or soil'],
+                dimensions: { min_value: 6, max_value: 10, unit: 'feet (trailing)' },
+                growth_rate: 'Fast'
+            },
+            'monstera': {
+                description: 'Monstera deliciosa, known as the Swiss Cheese Plant, is a popular tropical houseplant famous for its large, glossy leaves that develop distinctive holes and splits as they mature. Native to Central American rainforests.',
+                care_level: 'Easy',
+                maintenance: 'Low',
+                soil: ['Well-draining potting mix', 'Peat-based', 'Rich in organic matter'],
+                humidity: 60,
+                indoor: true,
+                poisonous_to_pets: true,
+                pruning_tips: 'Prune in spring to control size. Cut just above a node to encourage bushier growth.',
+                propagation: ['Stem cuttings', 'Air layering']
+            }
+        };
+        
+        // Check if we have defaults for this plant
+        for (const [key, defaults] of Object.entries(plantDefaults)) {
+            if (name.includes(key)) {
+                console.log(`Found defaults for ${key}`);
+                // Merge defaults with existing data - fill in missing fields
+                for (const [field, value] of Object.entries(defaults)) {
+                    if (!details[field] || (Array.isArray(details[field]) && details[field].length === 0)) {
+                        details[field] = value;
+                    }
+                }
+                return details;
+            }
+        }
+        
+        // Add generic helpful text if still sparse
+        if (!details.description) {
+            details.description = `${details.common_name} is a beautiful plant that can thrive with proper care and attention. Follow the care guidelines below for best results.`;
+        }
+        
+        if (!details.soil || details.soil.length === 0) {
+            details.soil = ['Well-draining potting mix'];
+        }
+        
+        if (!details.pruning_tips) {
+            details.pruning_tips = 'Remove dead or damaged foliage as needed. Prune to maintain desired shape and size.';
+        }
+        
         return details;
     }
 

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Water Tracker - Rooted With Eva</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html"><img src="images/logo.png" alt="Rooted With Eva" class="logo-img"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="care-tips.html">Care Tips</a></li>
+                <li><a href="tracker.html" class="active">Water Tracker</a></li>
+                <li><a href="nh-growing.html">NH Growing</a></li>
+                <li><a href="resources.html">Resources</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Plant Water Tracker</h1>
+            <p>Keep your plants happy with personalized watering schedules</p>
+        </div>
+    </section>
+
+    <!-- Water Tracker Section -->
+    <section class="section tracker-section">
+        <div class="container">
+            <!-- Plant Search Section -->
+            <div class="plant-search-container">
+                <h3>🔍 Search Plant Database</h3>
+                <div class="search-box">
+                    <input type="text" id="plantSearch" placeholder="Search for any plant (e.g., Monstera, Snake Plant)">
+                    <button class="btn-search" onclick="searchPlantDatabase()">Search</button>
+                </div>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+            
+            <div class="tracker-container">
+                <div class="add-plant">
+                    <h3>Add Your Plant</h3>
+                    <input type="text" id="plantName" placeholder="Plant name (e.g., Pothos)">
+                    <input type="number" id="wateringDays" placeholder="Days between watering" min="1" max="30">
+                    <button class="btn-primary" onclick="addPlant()">Add Plant</button>
+                    <div id="suggestedCare" class="suggested-care"></div>
+                </div>
+                <div class="plants-list" id="plantsList">
+                    <!-- Plants will be added here dynamically -->
+                </div>
+            </div>
+            <div class="watering-calendar" id="wateringCalendar">
+                <h3>Upcoming Watering Schedule</h3>
+                <div id="calendarContent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>Made with 💚 for New Hampshire plant parents</p>
+                <p>Remember: Every expert was once a beginner. Happy growing!</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="local-plant-database.js"></script>
+    <script src="plant-api.js"></script>
+    <script src="script.js"></script>
+    <script type="module">
+        // Import auth module for tracker page
+        try {
+            import('./auth-ui.js').then(module => {
+                window.authModule = module;
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        module.createAuthUI();
+                    });
+                } else {
+                    module.createAuthUI();
+                }
+            }).catch(error => {
+                console.error('Failed to load auth module:', error);
+            });
+        } catch (error) {
+            console.error('Module import not supported:', error);
+        }
+    </script>
+</body>
+</html>

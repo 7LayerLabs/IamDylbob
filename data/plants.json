@@ -1,0 +1,134 @@
+[
+  {
+    "id": "zz",
+    "common_name": "ZZ Plant",
+    "species": "Zamioculcas zamiifolia",
+    "light": "Low",
+    "water_freq": "Biweekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "ZZ plants store water in rhizomes; very drought tolerant.",
+    "image": "https://images.pexels.com/photos/7663986/pexels-photo-7663986.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "monstera",
+    "common_name": "Monstera",
+    "species": "Monstera deliciosa",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Famous for its split leaves and Instagram popularity.",
+    "image": "https://images.pexels.com/photos/3097770/pexels-photo-3097770.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "pothos",
+    "common_name": "Golden Pothos",
+    "species": "Epipremnum aureum",
+    "light": "Low",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "NASA-approved air purifier that thrives on neglect.",
+    "image": "https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "spider",
+    "common_name": "Spider Plant",
+    "species": "Chlorophytum comosum",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": true,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Produces baby 'spiderettes' that can be propagated easily.",
+    "image": "https://images.pexels.com/photos/4503266/pexels-photo-4503266.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "snake",
+    "common_name": "Snake Plant",
+    "species": "Sansevieria trifasciata",
+    "light": "Low",
+    "water_freq": "Monthly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Releases oxygen at night, perfect for bedrooms.",
+    "image": "https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "peace-lily",
+    "common_name": "Peace Lily",
+    "species": "Spathiphyllum wallisii",
+    "light": "Low",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Droops dramatically when thirsty, bounces back quickly after watering.",
+    "image": "https://images.pexels.com/photos/4425201/pexels-photo-4425201.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "rubber-tree",
+    "common_name": "Rubber Tree",
+    "species": "Ficus elastica",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Glossy leaves were once used to make rubber before synthetics.",
+    "image": "https://images.pexels.com/photos/5858235/pexels-photo-5858235.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "aloe",
+    "common_name": "Aloe Vera",
+    "species": "Aloe barbadensis miller",
+    "light": "Bright Direct",
+    "water_freq": "Biweekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Gel inside leaves soothes burns and has medicinal properties.",
+    "image": "https://images.pexels.com/photos/1353938/pexels-photo-1353938.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "boston-fern",
+    "common_name": "Boston Fern",
+    "species": "Nephrolepis exaltata",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": true,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Victorian favorite that loves humidity and misting.",
+    "image": "https://images.pexels.com/photos/6297518/pexels-photo-6297518.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "fiddle-leaf",
+    "common_name": "Fiddle Leaf Fig",
+    "species": "Ficus lyrata",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Instagram star with violin-shaped leaves, a bit of a diva.",
+    "image": "https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "prayer-plant",
+    "common_name": "Prayer Plant",
+    "species": "Maranta leuconeura",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": true,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Leaves fold up at night like praying hands.",
+    "image": "https://images.pexels.com/photos/7663990/pexels-photo-7663990.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "jade",
+    "common_name": "Jade Plant",
+    "species": "Crassula ovata",
+    "light": "Bright Direct",
+    "water_freq": "Biweekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "trivia": "Symbol of good luck and prosperity in many cultures.",
+    "image": "https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  }
+]

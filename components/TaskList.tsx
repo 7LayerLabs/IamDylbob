@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getJournal, markPlantWatered, removeFromJournal, type JournalEntry } from '@/lib/journal'
+import { getJournal, markPlantWatered, removeFromJournal, type JournalEntry } from '@/data/lib/journal'
 
 export default function TaskList() {
   const [tasks, setTasks] = useState<JournalEntry[]>([])

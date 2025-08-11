@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import SearchBar from '@/components/SearchBar'
-import { fetchPlants, PerenualPlant, PerenualListResponse } from '@/lib/perenual-api'
+import { fetchPlants, PerenualPlant, PerenualListResponse } from '@/data/lib/perenual-api'
 
 export default function PlantDatabase() {
   const [searchTerm, setSearchTerm] = useState('')

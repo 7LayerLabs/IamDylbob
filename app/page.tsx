@@ -10,7 +10,7 @@ import ShopList from '@/components/ShopList'
 import Navigation from '@/components/Navigation'
 import plantsData from '@/data/plants.json'
 import shopsData from '@/data/shops.json'
-import { addPlantToJournal } from '@/lib/journal'
+import { addPlantToJournal } from '@/data/lib/journal'
 
 type FilterChip = 'Indoor' | 'Low Light' | 'Pet Safe' | 'Water: Weekly'
 

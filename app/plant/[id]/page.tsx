@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
-import { fetchPlantDetails, PerenualDetailResponse } from '@/lib/perenual-api'
+import { fetchPlantDetails, PerenualDetailResponse } from '@/data/lib/perenual-api'
 
 export default function PlantDetail({ params }: { params: { id: string } }) {
   const [plant, setPlant] = useState<PerenualDetailResponse | null>(null)

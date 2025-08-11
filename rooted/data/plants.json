@@ -1,24 +1,15 @@
 [
   {
-    "id": "zz",
-    "common_name": "ZZ Plant",
-    "species": "Zamioculcas zamiifolia",
-    "light": "Low",
-    "water_freq": "Biweekly",
-    "pet_safe": false,
-    "indoor_outdoor": "Indoor",
-    "trivia": "ZZ plants store water in rhizomes; very drought tolerant.",
-    "image": "https://images.pexels.com/photos/7663986/pexels-photo-7663986.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
-  },
-  {
     "id": "monstera",
-    "common_name": "Monstera",
+    "common_name": "Monstera Deliciosa",
     "species": "Monstera deliciosa",
     "light": "Bright Indirect",
     "water_freq": "Weekly",
     "pet_safe": false,
     "indoor_outdoor": "Indoor",
-    "trivia": "Famous for its split leaves and Instagram popularity.",
+    "air_purifying": false,
+    "easy_care": false,
+    "trivia": "Famous for its split leaves that develop as the plant matures.",
     "image": "https://images.pexels.com/photos/3097770/pexels-photo-3097770.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
@@ -29,8 +20,36 @@
     "water_freq": "Weekly",
     "pet_safe": false,
     "indoor_outdoor": "Indoor",
-    "trivia": "NASA-approved air purifier that thrives on neglect.",
+    "air_purifying": true,
+    "easy_care": true,
+    "trivia": "NASA-approved air purifier that's nearly impossible to kill.",
     "image": "https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "snake",
+    "common_name": "Snake Plant",
+    "species": "Sansevieria trifasciata",
+    "light": "Low",
+    "water_freq": "Biweekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": true,
+    "easy_care": true,
+    "trivia": "Releases oxygen at night, making it perfect for bedrooms.",
+    "image": "https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "zz",
+    "common_name": "ZZ Plant",
+    "species": "Zamioculcas zamiifolia",
+    "light": "Low",
+    "water_freq": "Biweekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": false,
+    "easy_care": true,
+    "trivia": "Stores water in thick rhizomes, extremely drought tolerant.",
+    "image": "https://images.pexels.com/photos/7663986/pexels-photo-7663986.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
     "id": "spider",
@@ -40,19 +59,10 @@
     "water_freq": "Weekly",
     "pet_safe": true,
     "indoor_outdoor": "Indoor",
-    "trivia": "Produces baby 'spiderettes' that can be propagated easily.",
+    "air_purifying": true,
+    "easy_care": true,
+    "trivia": "Produces baby 'spiderettes' that are easy to propagate.",
     "image": "https://images.pexels.com/photos/4503266/pexels-photo-4503266.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
-  },
-  {
-    "id": "snake",
-    "common_name": "Snake Plant",
-    "species": "Sansevieria trifasciata",
-    "light": "Low",
-    "water_freq": "Monthly",
-    "pet_safe": false,
-    "indoor_outdoor": "Indoor",
-    "trivia": "Releases oxygen at night, perfect for bedrooms.",
-    "image": "https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
     "id": "peace-lily",
@@ -62,18 +72,48 @@
     "water_freq": "Weekly",
     "pet_safe": false,
     "indoor_outdoor": "Indoor",
-    "trivia": "Droops dramatically when thirsty, bounces back quickly after watering.",
+    "air_purifying": true,
+    "easy_care": false,
+    "trivia": "Tells you when it needs water by drooping dramatically.",
     "image": "https://images.pexels.com/photos/4425201/pexels-photo-4425201.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
-    "id": "rubber-tree",
-    "common_name": "Rubber Tree",
+    "id": "rubber-plant",
+    "common_name": "Rubber Plant",
     "species": "Ficus elastica",
     "light": "Bright Indirect",
     "water_freq": "Weekly",
     "pet_safe": false,
     "indoor_outdoor": "Indoor",
-    "trivia": "Glossy leaves were once used to make rubber before synthetics.",
+    "air_purifying": true,
+    "easy_care": false,
+    "trivia": "Glossy leaves look almost artificial and are easy to clean.",
+    "image": "https://images.pexels.com/photos/4503267/pexels-photo-4503267.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "fiddle-leaf",
+    "common_name": "Fiddle Leaf Fig",
+    "species": "Ficus lyrata",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": false,
+    "easy_care": false,
+    "trivia": "Instagram's favorite houseplant with violin-shaped leaves.",
+    "image": "https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "philodendron",
+    "common_name": "Heartleaf Philodendron",
+    "species": "Philodendron hederaceum",
+    "light": "Low",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": true,
+    "easy_care": true,
+    "trivia": "Heart-shaped leaves that trail beautifully from shelves.",
     "image": "https://images.pexels.com/photos/5858235/pexels-photo-5858235.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
@@ -84,8 +124,23 @@
     "water_freq": "Biweekly",
     "pet_safe": false,
     "indoor_outdoor": "Indoor",
-    "trivia": "Gel inside leaves soothes burns and has medicinal properties.",
-    "image": "https://images.pexels.com/photos/1353938/pexels-photo-1353938.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+    "air_purifying": true,
+    "easy_care": true,
+    "trivia": "Gel inside leaves soothes burns and skin irritations.",
+    "image": "https://images.pexels.com/photos/1382394/pexels-photo-1382394.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "chinese-evergreen",
+    "common_name": "Chinese Evergreen",
+    "species": "Aglaonema",
+    "light": "Low",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": true,
+    "easy_care": true,
+    "trivia": "Comes in stunning pink, red, and silver varieties.",
+    "image": "https://images.pexels.com/photos/7664037/pexels-photo-7664037.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
     "id": "boston-fern",
@@ -95,30 +150,88 @@
     "water_freq": "Weekly",
     "pet_safe": true,
     "indoor_outdoor": "Indoor",
+    "air_purifying": true,
+    "easy_care": false,
     "trivia": "Victorian favorite that loves humidity and misting.",
-    "image": "https://images.pexels.com/photos/6297518/pexels-photo-6297518.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+    "image": "https://images.pexels.com/photos/5699665/pexels-photo-5699665.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
-    "id": "fiddle-leaf",
-    "common_name": "Fiddle Leaf Fig",
-    "species": "Ficus lyrata",
+    "id": "dracaena",
+    "common_name": "Dracaena",
+    "species": "Dracaena marginata",
     "light": "Bright Indirect",
     "water_freq": "Weekly",
     "pet_safe": false,
     "indoor_outdoor": "Indoor",
-    "trivia": "Instagram star with violin-shaped leaves, a bit of a diva.",
-    "image": "https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+    "air_purifying": true,
+    "easy_care": true,
+    "trivia": "Dragon tree with spiky leaves that tolerates neglect well.",
+    "image": "https://images.pexels.com/photos/7663994/pexels-photo-7663994.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
-    "id": "prayer-plant",
-    "common_name": "Prayer Plant",
-    "species": "Maranta leuconeura",
+    "id": "money-tree",
+    "common_name": "Money Tree",
+    "species": "Pachira aquatica",
     "light": "Bright Indirect",
     "water_freq": "Weekly",
     "pet_safe": true,
     "indoor_outdoor": "Indoor",
+    "air_purifying": false,
+    "easy_care": true,
+    "trivia": "Braided trunk symbolizes good luck and prosperity.",
+    "image": "https://images.pexels.com/photos/4503261/pexels-photo-4503261.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "bird-of-paradise",
+    "common_name": "Bird of Paradise",
+    "species": "Strelitzia reginae",
+    "light": "Bright Direct",
+    "water_freq": "Weekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": false,
+    "easy_care": false,
+    "trivia": "Dramatic tropical plant with orange and blue flowers.",
+    "image": "https://images.pexels.com/photos/5691901/pexels-photo-5691901.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "calathea",
+    "common_name": "Prayer Plant",
+    "species": "Calathea",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": true,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": true,
+    "easy_care": false,
     "trivia": "Leaves fold up at night like praying hands.",
-    "image": "https://images.pexels.com/photos/7663990/pexels-photo-7663990.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+    "image": "https://images.pexels.com/photos/6297518/pexels-photo-6297518.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "string-of-pearls",
+    "common_name": "String of Pearls",
+    "species": "Senecio rowleyanus",
+    "light": "Bright Direct",
+    "water_freq": "Biweekly",
+    "pet_safe": false,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": false,
+    "easy_care": false,
+    "trivia": "Unique cascading succulent that looks like green pearls.",
+    "image": "https://images.pexels.com/photos/4505168/pexels-photo-4505168.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "pilea",
+    "common_name": "Chinese Money Plant",
+    "species": "Pilea peperomioides",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": true,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": false,
+    "easy_care": true,
+    "trivia": "Round coin-shaped leaves on delicate stems.",
+    "image": "https://images.pexels.com/photos/4507718/pexels-photo-4507718.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   },
   {
     "id": "jade",
@@ -128,7 +241,22 @@
     "water_freq": "Biweekly",
     "pet_safe": false,
     "indoor_outdoor": "Indoor",
-    "trivia": "Symbol of good luck and prosperity in many cultures.",
-    "image": "https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+    "air_purifying": false,
+    "easy_care": true,
+    "trivia": "Succulent money tree that can live for decades.",
+    "image": "https://images.pexels.com/photos/4750274/pexels-photo-4750274.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+  },
+  {
+    "id": "orchid",
+    "common_name": "Moth Orchid",
+    "species": "Phalaenopsis",
+    "light": "Bright Indirect",
+    "water_freq": "Weekly",
+    "pet_safe": true,
+    "indoor_outdoor": "Indoor",
+    "air_purifying": false,
+    "easy_care": false,
+    "trivia": "Elegant flowers that can bloom for months.",
+    "image": "https://images.pexels.com/photos/4622980/pexels-photo-4622980.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
   }
 ]

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Lull Farm",
+    "city": "Hollis",
+    "url": "https://lullfarm.com",
+    "notes": "Just 10 minutes from Nashua. Family-owned since 1962, offering houseplants, annuals, and organic produce."
+  },
+  {
+    "name": "Campbell's Nurseries & Garden Centers",
+    "city": "Wilton",
+    "url": "https://campbellsnurseries.com",
+    "notes": "15 minutes west. Extensive greenhouse selection, landscaping services, and seasonal workshops."
+  },
+  {
+    "name": "Wagon Wheel Nursery",
+    "city": "Merrimack",
+    "url": "https://www.wagonwheelnursery.com",
+    "notes": "10 minutes north. Wide variety of indoor plants, garden supplies, and expert advice."
+  },
+  {
+    "name": "Demers Garden Center",
+    "city": "Manchester",
+    "url": "https://www.demersgardencenter.com",
+    "notes": "20 minutes north. Full-service center with tropicals, succulents, and custom container gardens."
+  },
+  {
+    "name": "Pelham Nurseries",
+    "city": "Pelham",
+    "url": "https://www.pelhamnurseries.com",
+    "notes": "15 minutes east. Specializes in native plants, shade perennials, and organic gardening supplies."
+  }
+]

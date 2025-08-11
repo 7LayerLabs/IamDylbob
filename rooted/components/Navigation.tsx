@@ -8,17 +8,11 @@ export default function Navigation() {
   
   const links = [
     { href: '/', label: 'Home' },
-    { href: '/plant-database', label: 'Houseplant Database' },
-    { href: '/care-tips', label: 'Care Tips' },
-    { href: '/water-tracker-guide', label: 'Water Tracker Guide' },
-    { href: '/nh-growing-guide', label: 'NH Growing Guide' },
+    { href: '/plant-database', label: 'Plant Library' },
+    { href: '/care-tips', label: 'Care Guide' },
+    { href: '/water-tracker-guide', label: 'Watering Schedule' },
+    { href: '/nh-growing-guide', label: 'Indoor Growing Tips' },
     { href: '/resources', label: 'Resources' },
-  ]
-  
-  const homeLinks = [
-    { href: '#plant-explorer', label: 'Plant Explorer' },
-    { href: '#my-journal', label: 'My Journal' },
-    { href: '#local-shops', label: 'Local Shops' },
   ]
   
   return (
@@ -37,15 +31,6 @@ export default function Navigation() {
             >
               {link.label}
             </Link>
-          ))}
-          {pathname === '/' && homeLinks.map(link => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-eva-ink/70 hover:text-eva-green transition-colors font-medium"
-            >
-              {link.label}
-            </a>
           ))}
         </nav>
       </div>

@@ -140,15 +140,19 @@ export async function fetchPlants(
     key: API_KEY,
     page: page.toString(),
     per_page: '30',
-    // Always filter for indoor plants by default
-    indoor: 'true',
   });
 
-  // Add optional filters
-  if (options.q) params.append('q', options.q);
-  // Override indoor filter if explicitly set to false
-  if (options.indoor === false) {
-    params.set('indoor', 'false');
+  // Add search query if provided
+  if (options.q) {
+    params.append('q', options.q);
+  } else {
+    // Only filter for indoor plants when not searching
+    params.append('indoor', 'true');
+  }
+  
+  // Override indoor filter if explicitly set
+  if (options.indoor !== undefined) {
+    params.set('indoor', options.indoor.toString());
   }
   if (options.edible !== undefined) params.append('edible', options.edible.toString());
   if (options.poisonous !== undefined) params.append('poisonous', options.poisonous.toString());
@@ -159,10 +163,26 @@ export async function fetchPlants(
   const response = await fetch(`${BASE_URL}/species-list?${params.toString()}`);
   
   if (!response.ok) {
+    const errorData = await response.text();
+    if (errorData.includes('rate limit')) {
+      throw new Error('API rate limit exceeded. Please try again in a few minutes.');
+    }
     throw new Error(`API error: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  // If searching and no results, try a broader search
+  if (options.q && data.data.length === 0) {
+    // Remove indoor filter and try again
+    params.delete('indoor');
+    const retryResponse = await fetch(`${BASE_URL}/species-list?${params.toString()}`);
+    if (retryResponse.ok) {
+      return retryResponse.json();
+    }
+  }
+
+  return data;
 }
 
 // Fetch detailed information about a specific plant

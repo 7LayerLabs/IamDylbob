@@ -1,0 +1,19 @@
+{
+  "name": "rooted-plant-tracker",
+  "version": 2,
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "env": {
+    "NEXT_PUBLIC_TREFLE_API_KEY": "@trefle-api-key"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_TREFLE_API_KEY": "@trefle-api-key"
+    }
+  },
+  "functions": {
+    "app/api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}

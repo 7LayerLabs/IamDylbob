@@ -4,67 +4,64 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
-import { fetchPlantDetails, PerenualDetailResponse } from '@/lib/perenual-api'
+import nhPlantsData from '@/data/nh-houseplants.json'
+import { getPlantById, Plant } from '@/data/lib/plant-api-service'
 
 export default function PlantDetail({ params }: { params: { id: string } }) {
-  const [plant, setPlant] = useState<PerenualDetailResponse | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [plant, setPlant] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const loadPlant = async () => {
+    async function loadPlant() {
+      setIsLoading(true)
       try {
-        const data = await fetchPlantDetails(parseInt(params.id))
-        setPlant(data)
-      } catch (err) {
-        setError('Failed to load plant details')
-        console.error(err)
+        // Try to get plant from hybrid service (handles local, Trefle, and OpenFarm)
+        const hybridPlant = await getPlantById(params.id)
+        if (hybridPlant) {
+          setPlant(hybridPlant)
+        } else {
+          // Fallback to local data
+          const foundPlant = nhPlantsData.find(p => p.id === params.id)
+          setPlant(foundPlant)
+        }
+      } catch (error) {
+        console.error('Error loading plant:', error)
+        // Fallback to local data
+        const foundPlant = nhPlantsData.find(p => p.id === params.id)
+        setPlant(foundPlant)
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     }
-    
     loadPlant()
   }, [params.id])
 
-  if (loading) {
+  if (isLoading) {
     return (
       <main className="min-h-screen bg-eva-beige">
         <Navigation />
         <div className="px-8 lg:px-16 py-12 text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-eva-green"></div>
-          <p className="mt-4 text-eva-ink/60">Loading plant details...</p>
+          <div className="animate-pulse">
+            <div className="h-8 bg-eva-greenLight/20 rounded w-64 mx-auto mb-4"></div>
+            <div className="h-4 bg-eva-greenLight/20 rounded w-48 mx-auto"></div>
+          </div>
         </div>
       </main>
     )
   }
 
-  if (error || !plant) {
+  if (!plant) {
     return (
       <main className="min-h-screen bg-eva-beige">
         <Navigation />
         <div className="px-8 lg:px-16 py-12 text-center">
           <h1 className="text-2xl font-bold text-eva-green mb-4">Plant Not Found</h1>
-          <p className="text-eva-ink/60 mb-4">{error}</p>
-          <Link href="/plant-database" className="text-eva-terracotta hover:underline">
+          <Link href="/rooted/plant-database" className="text-eva-terracotta hover:underline">
             Return to Plant Database
           </Link>
         </div>
       </main>
     )
-  }
-
-  const getPoisonousLabel = () => {
-    if (plant.poisonous_to_humans === 0 && plant.poisonous_to_pets === 0) return '✅ Pet & Human Safe'
-    if (plant.poisonous_to_pets > 0 && plant.poisonous_to_humans > 0) return '⚠️ Toxic to Pets & Humans'
-    if (plant.poisonous_to_pets > 0) return '🐾 Toxic to Pets'
-    if (plant.poisonous_to_humans > 0) return '👤 Toxic to Humans'
-    return 'Unknown'
-  }
-
-  const getPoisonousColor = () => {
-    if (plant.poisonous_to_humans === 0 && plant.poisonous_to_pets === 0) return 'bg-green-100 text-green-800'
-    return 'bg-red-100 text-red-800'
   }
 
   return (
@@ -74,18 +71,19 @@ export default function PlantDetail({ params }: { params: { id: string } }) {
       <div className="px-8 lg:px-16 py-12">
         <div className="max-w-6xl mx-auto">
           <Link 
-            href="/plant-database"
+            href="/rooted/plant-database"
             className="inline-flex items-center gap-2 text-eva-terracotta hover:text-eva-terracotta/80 mb-6"
           >
-            ← Back to Database
+            ← Back to Plant Library
           </Link>
           
           <div className="grid lg:grid-cols-2 gap-12">
+            {/* Left side - Image and Quick Facts */}
             <div>
-              {plant.default_image ? (
+              {plant.image ? (
                 <div className="relative h-96 w-full overflow-hidden bg-eva-greenLight/10 rounded-2xl">
                   <Image
-                    src={plant.default_image.original_url}
+                    src={plant.image}
                     alt={plant.common_name}
                     fill
                     className="object-cover"
@@ -99,175 +97,165 @@ export default function PlantDetail({ params }: { params: { id: string } }) {
                 </div>
               )}
               
+              {/* Quick Facts Card */}
               <div className="mt-6 bg-white rounded-2xl p-6 border border-eva-greenLight/20">
                 <h3 className="font-headline font-semibold text-lg text-eva-green mb-4">Quick Facts</h3>
                 <dl className="space-y-3">
-                  {plant.family && (
-                    <>
-                      <dt className="text-sm text-eva-ink/60">Family</dt>
-                      <dd className="font-medium">{plant.family}</dd>
-                    </>
-                  )}
-                  {plant.origin && plant.origin.length > 0 && (
-                    <>
-                      <dt className="text-sm text-eva-ink/60">Origin</dt>
-                      <dd className="font-medium">{plant.origin.join(', ')}</dd>
-                    </>
-                  )}
-                  {plant.dimension && (
-                    <>
-                      <dt className="text-sm text-eva-ink/60">Size</dt>
-                      <dd className="font-medium">{plant.dimension}</dd>
-                    </>
-                  )}
-                  {plant.growth_rate && (
-                    <>
-                      <dt className="text-sm text-eva-ink/60">Growth Rate</dt>
-                      <dd className="font-medium capitalize">{plant.growth_rate}</dd>
-                    </>
-                  )}
-                  {plant.hardiness && (
-                    <>
-                      <dt className="text-sm text-eva-ink/60">Hardiness Zone</dt>
-                      <dd className="font-medium">{plant.hardiness.min} - {plant.hardiness.max}</dd>
-                    </>
-                  )}
+                  <div>
+                    <dt className="text-sm text-eva-ink/60">Scientific Name</dt>
+                    <dd className="font-medium italic">{plant.scientific_name}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-eva-ink/60">Family</dt>
+                    <dd className="font-medium">{plant.family}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-eva-ink/60">Mature Size</dt>
+                    <dd className="font-medium">{plant.mature_size}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-eva-ink/60">Growth Rate</dt>
+                    <dd className="font-medium">{plant.growth_rate}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-eva-ink/60">Difficulty</dt>
+                    <dd className="font-medium">{plant.difficulty}</dd>
+                  </div>
                 </dl>
               </div>
             </div>
             
+            {/* Right side - Plant Information */}
             <div>
               <h1 className="text-[36px] font-headline font-bold text-eva-green mb-2">
                 {plant.common_name}
               </h1>
               <p className="text-lg text-eva-ink/60 italic mb-4">
-                {plant.scientific_name?.[0] || 'Unknown species'}
+                {plant.scientific_name}
               </p>
               
-              <div className="flex flex-wrap gap-2 mb-6">
-                <span className={`px-3 py-1.5 rounded-full font-semibold ${getPoisonousColor()}`}>
-                  {getPoisonousLabel()}
-                </span>
-                {plant.indoor && (
-                  <span className="px-3 py-1.5 bg-purple-100 text-purple-800 rounded-full">
-                    🏠 Indoor Plant
+              {/* Source Indicator */}
+              {'source' in plant && plant.source !== 'local' && (
+                <div className="mb-4">
+                  <span className={`inline-flex items-center gap-1 px-3 py-1 text-sm font-semibold rounded-full ${
+                    plant.source === 'trefle' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-orange-100 text-orange-800'
+                  }`}>
+                    '🌿 Data from Trefle'
                   </span>
-                )}
-                {plant.medicinal && (
-                  <span className="px-3 py-1.5 bg-teal-100 text-teal-800 rounded-full">
-                    💊 Medicinal
-                  </span>
-                )}
-                {plant.edible_fruit && (
-                  <span className="px-3 py-1.5 bg-orange-100 text-orange-800 rounded-full">
-                    🍎 Edible Fruit
-                  </span>
-                )}
-                {plant.flowers && (
-                  <span className="px-3 py-1.5 bg-pink-100 text-pink-800 rounded-full">
-                    🌸 Flowering
-                  </span>
-                )}
-              </div>
-              
-              {plant.description && (
-                <div className="mb-8">
-                  <h2 className="text-xl font-bold text-eva-green mb-3">About</h2>
-                  <p className="text-eva-ink/80 leading-relaxed">{plant.description}</p>
                 </div>
               )}
               
+              {/* Safety and Features Tags */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                {plant.pet_safe ? (
+                  <span className="px-3 py-1.5 bg-green-100 text-green-800 rounded-full font-semibold">
+                    ✅ Pet & Human Safe
+                  </span>
+                ) : (
+                  <span className="px-3 py-1.5 bg-red-100 text-red-800 rounded-full">
+                    ⚠️ Not Pet Safe
+                  </span>
+                )}
+                {plant.air_purifying && (
+                  <span className="px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full">
+                    🍃 Air Purifying
+                  </span>
+                )}
+                <span className="px-3 py-1.5 bg-purple-100 text-purple-800 rounded-full">
+                  {plant.difficulty === 'Easy' ? '👶' : plant.difficulty === 'Moderate' ? '👍' : '👨‍🌾'} {plant.difficulty}
+                </span>
+              </div>
+              
+              {/* Description */}
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-eva-green mb-3">About This Plant</h2>
+                <p className="text-eva-ink/80 leading-relaxed">{plant.description}</p>
+              </div>
+              
+              {/* NH Growing Tips */}
+              <div className="mb-8 bg-eva-greenLight/20 rounded-2xl p-6">
+                <h2 className="text-xl font-bold text-eva-green mb-3 flex items-center gap-2">
+                  🏔️ New Hampshire Growing Tips
+                </h2>
+                <p className="text-eva-ink/80 leading-relaxed">{plant.nh_tips}</p>
+              </div>
+              
+              {/* Care Information Grid */}
               <div className="space-y-6">
-                <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">
-                  <h3 className="font-semibold text-eva-green mb-3 flex items-center gap-2">
-                    💧 Watering
-                  </h3>
-                  <p className="text-eva-ink/80">
-                    <strong>Frequency:</strong> {plant.watering || 'Not specified'}
-                  </p>
-                  {plant.watering_general_benchmark && (
-                    <p className="text-eva-ink/80 mt-2">
-                      <strong>Amount:</strong> {plant.watering_general_benchmark.value} {plant.watering_general_benchmark.unit}
-                    </p>
-                  )}
-                  {plant.watering_period && (
-                    <p className="text-eva-ink/80 mt-2">
-                      <strong>Period:</strong> {plant.watering_period}
-                    </p>
-                  )}
-                </div>
-                
+                {/* Light Requirements */}
                 <div className="bg-yellow-50 rounded-2xl p-6 border border-yellow-200">
                   <h3 className="font-semibold text-eva-green mb-3 flex items-center gap-2">
                     ☀️ Light Requirements
                   </h3>
-                  <p className="text-eva-ink/80">
-                    {plant.sunlight?.map(s => s.replace(/_/g, ' ')).join(', ') || 'Not specified'}
+                  <p className="text-eva-ink/80 font-medium mb-2">{plant.light}</p>
+                  <p className="text-sm text-eva-ink/60">
+                    {plant.light.includes('Low') && 'Can tolerate darker corners and north-facing windows.'}
+                    {plant.light.includes('Moderate') && 'Prefers east or west-facing windows with filtered light.'}
+                    {plant.light.includes('Bright Indirect') && 'Needs bright light but avoid direct sun which can burn leaves.'}
+                    {plant.light.includes('Bright Direct') && 'Loves direct sunlight - perfect for south-facing windows.'}
                   </p>
                 </div>
                 
-                <div className="bg-eva-greenLight/20 rounded-2xl p-6">
+                {/* Watering */}
+                <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">
                   <h3 className="font-semibold text-eva-green mb-3 flex items-center gap-2">
-                    🌱 Care Information
+                    💧 Watering Schedule
                   </h3>
-                  <div className="space-y-2 text-eva-ink/80">
-                    {plant.care_level && (
-                      <p><strong>Care Level:</strong> {plant.care_level}</p>
-                    )}
-                    {plant.maintenance && (
-                      <p><strong>Maintenance:</strong> {plant.maintenance}</p>
-                    )}
-                    {plant.soil && plant.soil.length > 0 && (
-                      <p><strong>Soil Type:</strong> {plant.soil.join(', ')}</p>
-                    )}
-                    {plant.propagation && plant.propagation.length > 0 && (
-                      <p><strong>Propagation:</strong> {plant.propagation.join(', ')}</p>
-                    )}
-                    {plant.pruning_month && plant.pruning_month.length > 0 && (
-                      <p><strong>Pruning Months:</strong> {plant.pruning_month.join(', ')}</p>
-                    )}
+                  <p className="text-eva-ink/80 font-medium mb-2">{plant.water}</p>
+                  <p className="text-sm text-eva-ink/60">
+                    {plant.water.includes('Daily') && 'Keep soil consistently moist. Check daily, especially in NH\'s dry winter air.'}
+                    {plant.water.includes('Weekly') && 'Water when top inch of soil is dry, typically once a week.'}
+                    {plant.water.includes('Biweekly') && 'Allow soil to dry out partially between waterings.'}
+                    {plant.water.includes('Monthly') && 'Very drought tolerant. Let soil dry completely between waterings.'}
+                  </p>
+                </div>
+                
+                {/* Environment */}
+                <div className="bg-eva-greenLight/20 rounded-2xl p-6">
+                  <h3 className="font-semibold text-eva-green mb-3">🌡️ Environment</h3>
+                  <div className="grid grid-cols-2 gap-4 text-eva-ink/80">
+                    <div>
+                      <span className="font-medium">Temperature:</span>
+                      <p className="text-sm">{plant.temperature}</p>
+                    </div>
+                    <div>
+                      <span className="font-medium">Humidity:</span>
+                      <p className="text-sm">{plant.humidity}</p>
+                      {plant.humidity.includes('High') && (
+                        <p className="text-xs text-eva-ink/60 mt-1">Use humidifier or pebble tray in dry NH winters</p>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
-                {plant.pest_susceptibility && plant.pest_susceptibility.length > 0 && (
-                  <div className="bg-orange-50 rounded-2xl p-6 border border-orange-200">
-                    <h3 className="font-semibold text-eva-green mb-3 flex items-center gap-2">
-                      🐛 Common Pests
-                    </h3>
-                    <p className="text-eva-ink/80">
-                      {plant.pest_susceptibility.join(', ')}
-                    </p>
-                  </div>
-                )}
-                
+                {/* Care Tips */}
                 <div className="bg-eva-terracotta/10 rounded-2xl p-6">
-                  <h3 className="font-semibold text-eva-green mb-3">Plant Features</h3>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className={plant.drought_tolerant ? 'text-green-600' : 'text-gray-400'}>
-                        {plant.drought_tolerant ? '✅' : '❌'}
-                      </span>
-                      <span>Drought Tolerant</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={plant.salt_tolerant ? 'text-green-600' : 'text-gray-400'}>
-                        {plant.salt_tolerant ? '✅' : '❌'}
-                      </span>
-                      <span>Salt Tolerant</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={plant.tropical ? 'text-green-600' : 'text-gray-400'}>
-                        {plant.tropical ? '✅' : '❌'}
-                      </span>
-                      <span>Tropical</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={plant.invasive ? 'text-red-600' : 'text-green-600'}>
-                        {plant.invasive ? '⚠️' : '✅'}
-                      </span>
-                      <span>Non-Invasive</span>
-                    </div>
-                  </div>
+                  <h3 className="font-semibold text-eva-green mb-3">💡 Care Tips</h3>
+                  <ul className="space-y-2 text-sm text-eva-ink/80">
+                    {plant.difficulty === 'Easy' && (
+                      <>
+                        <li>• Perfect for beginners - very forgiving</li>
+                        <li>• Tolerates occasional neglect</li>
+                      </>
+                    )}
+                    {plant.difficulty === 'Moderate' && (
+                      <>
+                        <li>• Requires regular attention but not fussy</li>
+                        <li>• Monitor watering and light conditions</li>
+                      </>
+                    )}
+                    {plant.difficulty === 'Hard' && (
+                      <>
+                        <li>• Needs consistent care and attention</li>
+                        <li>• Monitor humidity and temperature closely</li>
+                      </>
+                    )}
+                    {plant.air_purifying && <li>• Helps clean indoor air of toxins</li>}
+                    {plant.pet_safe && <li>• Safe around curious pets and children</li>}
+                    {!plant.pet_safe && <li>• ⚠️ Keep away from pets and children</li>}
+                  </ul>
                 </div>
               </div>
             </div>

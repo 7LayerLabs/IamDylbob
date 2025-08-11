@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.trefle.io)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "Bash(for id in pothos-golden snake-plant zz-plant spider-plant peace-lily monstera-deliciosa)",
+      "Bash(do echo -n \"$id: \")",
+      "Bash(done)"
+    ],
+    "deny": []
+  }
+}

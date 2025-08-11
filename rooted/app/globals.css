@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;600;700&family=Quicksand:wght@500;600;700&display=swap');
+
+body { @apply bg-eva-beige text-eva-ink font-body antialiased; }
+
+/* faint leaf pattern on the right panel */
+.leaf-pattern{
+  background-image:
+    radial-gradient(18px 18px at 20% 20%, rgba(0,0,0,.05) 2px, transparent 2px),
+    radial-gradient(18px 18px at 80% 60%, rgba(0,0,0,.05) 2px, transparent 2px);
+  background-size:160px 160px;
+  opacity:.32;
+}
+
+/* big curved cut separating columns */
+.curve-mask{
+  mask-image: radial-gradient(160% 140% at 0% 50%, #000 52%, transparent 53%);
+  -webkit-mask-image: radial-gradient(160% 140% at 0% 50%, #000 52%, transparent 53%);
+}

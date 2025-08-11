@@ -17,25 +17,13 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'via.placeholder.com',
+        hostname: 'perenual.com',
         port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'trefle.io',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 's3.amazonaws.com',
-        port: '',
-        pathname: '/openfarm-production/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.openfarm.cc',
+        hostname: '*.perenual.com',
         port: '',
         pathname: '/**',
       },

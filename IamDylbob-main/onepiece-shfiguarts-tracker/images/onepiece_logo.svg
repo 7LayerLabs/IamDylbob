@@ -1,0 +1,14 @@
+<svg width="300" height="100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="40" fill="#FFD700" stroke="#C41E3A" stroke-width="3"/>
+  
+  <!-- Straw hat icon -->
+  <ellipse cx="50" cy="45" rx="25" ry="8" fill="#D2691E"/>
+  <ellipse cx="50" cy="45" rx="25" ry="8" fill="none" stroke="#8B4513" stroke-width="2"/>
+  <rect x="25" y="43" width="50" height="4" fill="#C41E3A"/>
+  
+  <!-- Text -->
+  <text x="110" y="35" font-family="Arial Black, sans-serif" font-size="24" font-weight="bold" fill="#FFD700" stroke="#C41E3A" stroke-width="1">ONE PIECE</text>
+  <text x="110" y="55" font-family="Arial, sans-serif" font-size="14" fill="#FF6B35">SH FIGUARTS</text>
+  <text x="110" y="75" font-family="Arial, sans-serif" font-size="12" fill="#999">COLLECTION TRACKER</text>
+</svg>

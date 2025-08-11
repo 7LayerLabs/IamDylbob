@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel Legends Tracker - Sign In</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(237, 29, 36, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(237, 29, 36, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(237, 29, 36, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .auth-container {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 3px solid #ED1D24;
+            border-radius: 0;
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 
+                0 0 50px rgba(237, 29, 36, 0.5),
+                inset 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .marvel-logo {
+            margin-bottom: 30px;
+        }
+
+        .marvel-logo img {
+            max-width: 200px;
+            height: auto;
+            filter: drop-shadow(0 0 30px rgba(237, 29, 36, 1));
+        }
+
+        h1 {
+            color: #fff;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 
+                0 0 10px rgba(237, 29, 36, 0.8),
+                0 0 20px rgba(237, 29, 36, 0.6),
+                3px 3px 0px #ED1D24;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .google-signin-btn {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .google-signin-btn:hover {
+            background: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(66, 133, 244, 0.5);
+        }
+
+        .google-signin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .google-signin-btn:hover::before {
+            left: 100%;
+        }
+
+        .google-icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 2px;
+            padding: 4px;
+        }
+
+        .demo-mode {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+        }
+
+        .demo-btn {
+            background: transparent;
+            color: #666;
+            border: 2px solid #333;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .demo-btn:hover {
+            border-color: #ED1D24;
+            color: #ED1D24;
+        }
+
+        .error-message {
+            color: #ff0000;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="marvel-logo">
+            <img src="images/marvel_logo.avif" alt="Marvel Logo">
+        </div>
+        <h1>LEGENDS TRACKER</h1>
+        <p class="subtitle">Sign in to access your collection</p>
+        
+        <button class="google-signin-btn" onclick="signInWithGoogle()">
+            <svg class="google-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Sign in with Google
+        </button>
+        
+        <div class="demo-mode">
+            <button class="demo-btn" onclick="continueAsGuest()">Continue as Guest (Demo Mode)</button>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <script>
+        // Check if already authenticated
+        const isAuthenticated = localStorage.getItem('marvelLegendsAuth');
+        if (isAuthenticated) {
+            window.location.href = 'index.html';
+        }
+
+        function signInWithGoogle() {
+            // In a real implementation, you would use Google OAuth here
+            // For now, we'll simulate authentication
+            alert('Google Sign-In would be implemented here.\nFor demo purposes, click "Continue as Guest".\n\nTo implement real Google auth:\n1. Get Google OAuth credentials\n2. Add Google Sign-In JavaScript library\n3. Configure OAuth consent screen');
+            
+            // For demo, you could uncomment this to simulate sign-in:
+            // localStorage.setItem('marvelLegendsAuth', JSON.stringify({
+            //     user: 'demo@gmail.com',
+            //     name: 'Demo User',
+            //     signInTime: new Date().toISOString()
+            // }));
+            // window.location.href = 'index.html';
+        }
+
+        function continueAsGuest() {
+            localStorage.setItem('marvelLegendsAuth', JSON.stringify({
+                user: 'guest',
+                name: 'Guest User',
+                signInTime: new Date().toISOString()
+            }));
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

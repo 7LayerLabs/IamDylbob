@@ -1,0 +1,89 @@
+MARVEL LEGENDS FIGURE IMAGES GUIDE
+===================================
+
+To add images for your Marvel Legends figures:
+
+1. Image Naming Convention:
+   - Use lowercase with hyphens
+   - Remove special characters
+   - Format: figure-name.jpg
+   
+2. Expected Image Files (place in images/figures/ folder):
+
+Spider-Man Figures:
+- spider-man-classic.jpg
+- miles-morales.jpg
+- spider-gwen.jpg
+- symbiote-spider-man.jpg
+- scarlet-spider.jpg
+
+X-Men Figures:
+- wolverine-yellow-blue.jpg
+- cyclops-jim-lee.jpg
+- storm-mohawk.jpg
+- rogue-90s.jpg
+- gambit.jpg
+- magneto-classic.jpg
+- beast.jpg
+
+MCU Figures:
+- iron-man-mark-85.jpg
+- captain-america-endgame.jpg
+- thor-love-thunder.jpg
+- mighty-thor.jpg
+- black-panther-wakanda.jpg
+- shuri-black-panther.jpg
+- star-lord.jpg
+- groot-rocket.jpg
+- ant-man-quantumania.jpg
+
+Fantastic Four:
+- mr-fantastic.jpg
+- invisible-woman.jpg
+- human-torch.jpg
+- the-thing.jpg
+- doctor-doom.jpg
+
+Deadpool:
+- deadpool.jpg
+- lady-deadpool.jpg
+- wolverine-brown.jpg
+
+Villains:
+- green-goblin.jpg
+- doctor-octopus.jpg
+- venom.jpg
+- carnage.jpg
+- thanos-infinity.jpg
+- loki-tva.jpg
+
+Comic Legends:
+- captain-america-first.jpg
+- iron-man-model-70.jpg
+- hulk-classic.jpg
+- black-widow.jpg
+- hawkeye-classic.jpg
+
+Disney+ Series:
+- scarlet-witch.jpg
+- vision-wandavision.jpg
+- captain-america-sam.jpg
+- winter-soldier.jpg
+- moon-knight.jpg
+- ms-marvel.jpg
+- she-hulk.jpg
+
+3. Image Sources:
+   - Hasbro Pulse official product photos
+   - Marvel.com toy gallery
+   - Amazon product listings
+   - BigBadToyStore product pages
+
+4. Recommended Image Specs:
+   - Size: 400x600px (portrait)
+   - Format: JPG
+   - Background: White or transparent
+   - Quality: Web optimized (under 200KB)
+
+5. Placeholder Image:
+   A generic "no-image.jpg" will be used for missing images

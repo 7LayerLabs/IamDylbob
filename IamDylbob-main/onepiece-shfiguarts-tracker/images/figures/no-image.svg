@@ -1,0 +1,7 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#1a1a1a"/>
+  <rect x="10" y="10" width="180" height="180" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="100" y="90" font-family="Arial, sans-serif" font-size="14" fill="#FFD700" text-anchor="middle">One Piece</text>
+  <text x="100" y="110" font-family="Arial, sans-serif" font-size="14" fill="#FFD700" text-anchor="middle">SH Figuarts</text>
+  <text x="100" y="130" font-family="Arial, sans-serif" font-size="12" fill="#999" text-anchor="middle">No Image</text>
+</svg>

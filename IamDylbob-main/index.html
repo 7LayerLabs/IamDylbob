@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DylBob</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Container for text elements */
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* "I am" text styling */
+        .prefix-text {
+            font-size: clamp(1rem, 3vw, 2rem);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: -0.5rem;
+            background: linear-gradient(
+                45deg,
+                #ffffff,
+                #ff00ff,
+                #00ffff,
+                #ffffff
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite;
+            filter: contrast(1.2) brightness(1.1);
+        }
+
+        /* Main text styling */
+        .main-text {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            position: relative;
+            z-index: 10;
+            text-shadow: 
+                0 0 5px rgba(255, 255, 255, 0.9),
+                0 0 10px rgba(255, 0, 255, 0.6),
+                0 0 15px rgba(0, 255, 255, 0.6),
+                0 0 20px rgba(255, 0, 255, 0.4),
+                0 0 25px rgba(0, 255, 255, 0.4);
+        }
+
+        /* Gradient text effect */
+        .main-text {
+            background: linear-gradient(
+                45deg,
+                #ffffff,
+                #ff00ff,
+                #00ffff,
+                #ffffff
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite;
+            filter: contrast(1.2) brightness(1.1);
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Pulse effect on hover */
+        .main-text:hover {
+            animation: pulse 1s infinite, gradient 3s ease infinite;
+            cursor: pointer;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Scanline effect */
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: scan 8s linear infinite;
+            z-index: 5;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        /* Link bubble styles */
+        .link-bubble {
+            position: fixed;
+            bottom: -100px;
+            right: 50px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #e23636 0%, #b71c1c 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: popUp 1s ease-out 2s forwards, float-bubble 3s ease-in-out infinite;
+            z-index: 100;
+            box-shadow: 0 0 30px rgba(226, 54, 54, 0.6),
+                        0 0 60px rgba(183, 28, 28, 0.4);
+        }
+
+        @keyframes popUp {
+            0% {
+                bottom: -100px;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(180deg);
+            }
+            100% {
+                bottom: 50px;
+                transform: scale(1) rotate(360deg);
+            }
+        }
+
+        @keyframes float-bubble {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+        }
+
+        .link-bubble::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e23636 0%, #b71c1c 100%);
+            filter: blur(20px);
+            opacity: 0.5;
+            z-index: -1;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        .link-bubble:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 0 50px rgba(226, 54, 54, 0.8),
+                        0 0 100px rgba(183, 28, 28, 0.6);
+        }
+
+        .link-bubble-text {
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            animation: text-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes text-glow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 1),
+                           0 0 30px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* Ripple effect on click */
+        .link-bubble.clicked::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Secret Mission Bubble */
+        .secret-bubble {
+            position: fixed;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #555555 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: dropDown 2s ease-out 3s forwards, secretPulse 4s ease-in-out infinite;
+            z-index: 100;
+            box-shadow: 0 0 30px rgba(100, 100, 100, 0.8),
+                        0 0 60px rgba(50, 50, 50, 0.6),
+                        inset 0 0 20px rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes dropDown {
+            0% {
+                top: -150px;
+                transform: translateX(-50%) rotate(0deg) scale(0);
+            }
+            50% {
+                transform: translateX(-50%) rotate(180deg) scale(1.2);
+            }
+            70% {
+                top: 60px;
+                transform: translateX(-50%) rotate(270deg) scale(0.9);
+            }
+            85% {
+                top: 40px;
+                transform: translateX(-50%) rotate(340deg) scale(1.1);
+            }
+            100% {
+                top: 50px;
+                transform: translateX(-50%) rotate(360deg) scale(1);
+            }
+        }
+
+        @keyframes secretPulse {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0) scale(1);
+                box-shadow: 0 0 30px rgba(100, 100, 100, 0.8),
+                           0 0 60px rgba(50, 50, 50, 0.6),
+                           inset 0 0 20px rgba(255, 255, 255, 0.1);
+            }
+            25% {
+                transform: translateX(-50%) translateY(-10px) scale(1.05);
+            }
+            50% {
+                transform: translateX(-50%) translateY(0) scale(1);
+                box-shadow: 0 0 50px rgba(150, 150, 150, 1),
+                           0 0 100px rgba(100, 100, 100, 0.8),
+                           inset 0 0 30px rgba(255, 255, 255, 0.2);
+            }
+            75% {
+                transform: translateX(-50%) translateY(10px) scale(0.95);
+            }
+        }
+
+        .secret-bubble::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .secret-bubble:hover {
+            transform: translateX(-50%) scale(1.15);
+            box-shadow: 0 0 50px rgba(200, 200, 200, 1),
+                        0 0 100px rgba(150, 150, 150, 0.8),
+                        inset 0 0 40px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #2a2a2a 0%, #444444 50%, #666666 100%);
+        }
+
+        .secret-bubble-text {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                        0 0 20px rgba(255, 255, 255, 0.3);
+            animation: secretTextGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes secretTextGlow {
+            0%, 100% {
+                opacity: 0.7;
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 20px rgba(255, 255, 255, 1),
+                           0 0 30px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* Secret mission reveal effect */
+        .secret-bubble.activated::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            animation: secretRipple 1s ease-out;
+        }
+
+        @keyframes secretRipple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                border-color: rgba(255, 255, 255, 1);
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+                border-color: rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* TGRGreen Bubble */
+        .tgrgreen-bubble {
+            position: fixed;
+            bottom: -100px;
+            left: 50px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #00ff00 0%, #008800 50%, #004400 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: slideUp 1.5s ease-out 2.5s forwards, greenFloat 4s ease-in-out infinite;
+            z-index: 100;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6),
+                        0 0 60px rgba(0, 136, 0, 0.4),
+                        inset 0 0 20px rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(0, 255, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            0% {
+                bottom: -100px;
+                transform: scale(0) rotate(0deg);
+            }
+            40% {
+                transform: scale(1.3) rotate(180deg);
+            }
+            70% {
+                bottom: 60px;
+                transform: scale(0.9) rotate(270deg);
+            }
+            85% {
+                bottom: 45px;
+                transform: scale(1.1) rotate(340deg);
+            }
+            100% {
+                bottom: 50px;
+                transform: scale(1) rotate(360deg);
+            }
+        }
+
+        @keyframes greenFloat {
+            0%, 100% {
+                transform: translateY(0) translateX(0) scale(1);
+                box-shadow: 0 0 30px rgba(0, 255, 0, 0.6),
+                           0 0 60px rgba(0, 136, 0, 0.4);
+            }
+            25% {
+                transform: translateY(-15px) translateX(5px) scale(1.05);
+            }
+            50% {
+                transform: translateY(0) translateX(-5px) scale(1);
+                box-shadow: 0 0 50px rgba(0, 255, 0, 0.8),
+                           0 0 100px rgba(0, 200, 0, 0.6);
+            }
+            75% {
+                transform: translateY(10px) translateX(3px) scale(0.95);
+            }
+        }
+
+        .tgrgreen-bubble::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,255,0,0.3) 0%, transparent 70%);
+            filter: blur(15px);
+            animation: greenPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes greenPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.8;
+            }
+        }
+
+        .tgrgreen-bubble:hover {
+            transform: scale(1.2) rotate(-5deg);
+            box-shadow: 0 0 50px rgba(0, 255, 0, 1),
+                        0 0 100px rgba(0, 200, 0, 0.8),
+                        inset 0 0 40px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #00ff00 0%, #00aa00 50%, #006600 100%);
+        }
+
+        .tgrgreen-bubble-text {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8),
+                        0 0 20px rgba(0, 200, 0, 0.6);
+            animation: greenTextGlow 2.5s ease-in-out infinite;
+        }
+
+        @keyframes greenTextGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 1),
+                           0 0 30px rgba(0, 255, 0, 0.8),
+                           0 0 40px rgba(0, 200, 0, 0.6);
+            }
+        }
+
+        /* TGRGreen ripple effect */
+        .tgrgreen-bubble.clicked::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 255, 0, 0.8);
+            animation: greenRipple 0.8s ease-out;
+        }
+
+        @keyframes greenRipple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                border-color: rgba(0, 255, 0, 1);
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+                border-color: rgba(0, 255, 0, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="scanline"></div>
+    <div class="text-container">
+        <span class="prefix-text">I am</span>
+        <h1 class="main-text">DylBob</h1>
+    </div>
+    
+    <!-- Link Bubble -->
+    <a href="marvel-legends-tracker/index.html" class="link-bubble" id="linkBubble">
+        <span class="link-bubble-text">Marvel</span>
+    </a>
+    
+    <!-- Secret Mission Bubble -->
+    <a href="opsystem/index.html" class="secret-bubble" id="secretBubble">
+        <span class="secret-bubble-text">Private<br>System</span>
+    </a>
+    
+    <!-- TGRGreen Bubble -->
+    <a href="rooted/index.html" class="tgrgreen-bubble" id="tgrgreenBubble">
+        <span class="tgrgreen-bubble-text">Rooted</span>
+    </a>
+
+    <script>
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        const numberOfParticles = 50;
+
+        for (let i = 0; i < numberOfParticles; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Add interactive glow on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.querySelector('.main-text').style.textShadow = `
+                0 0 ${5 + x * 10}px rgba(255, 255, 255, 0.9),
+                0 0 ${10 + x * 10}px rgba(255, 0, 255, 0.6),
+                0 0 ${15 + x * 10}px rgba(0, 255, 255, 0.6),
+                0 0 ${20 + y * 10}px rgba(255, 0, 255, 0.4),
+                0 0 ${25 + y * 10}px rgba(0, 255, 255, 0.4)
+            `;
+        });
+
+        // Add ripple effect on bubble click
+        const linkBubble = document.getElementById('linkBubble');
+        linkBubble.addEventListener('click', function(e) {
+            
+            // Add ripple animation
+            this.classList.add('clicked');
+            setTimeout(() => {
+                this.classList.remove('clicked');
+            }, 600);
+        });
+
+        // Add secret mission activation effect
+        const secretBubble = document.getElementById('secretBubble');
+        secretBubble.addEventListener('click', function(e) {
+            
+            // Add activation animation
+            this.classList.add('activated');
+            setTimeout(() => {
+                this.classList.remove('activated');
+            }, 1000);
+        });
+
+        // Add TGRGreen bubble click effect
+        const tgrgreenBubble = document.getElementById('tgrgreenBubble');
+        tgrgreenBubble.addEventListener('click', function(e) {
+            // Don't prevent default - let the link work
+            // Add ripple animation
+            this.classList.add('clicked');
+            setTimeout(() => {
+                this.classList.remove('clicked');
+            }, 800);
+        });
+    </script>
+</body>
+</html>
